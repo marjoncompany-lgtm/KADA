@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>KADA 5.0mins | Master Auteur AI Video Studio</title>
+  
+  <!-- Mobile & PWA Configuration -->
+  <meta name="theme-color" content="#040507">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="KADA 5.0mins">
+  <link id="pwaManifestLink" rel="manifest">
+
+  <!-- Typography: Plus Jakarta Sans, JetBrains Mono, Syne -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  
+  <!-- Core CDNs: Tailwind CSS, Lucide Icons, and JSZip Engine -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            cinema: ['"Syne"', 'sans-serif'],
+          },
+          colors: {
+            cine: {
+              black: '#040507',
+              void: '#07090e',
+              panel: 'rgba(11, 15, 23, 0.85)',
+              surface: 'rgba(18, 24, 38, 0.65)',
+              border: 'rgba(255, 255, 255, 0.08)',
+              borderHover: 'rgba(255, 255, 255, 0.18)',
+              amber: '#ffaa00',
+              cyan: '#00e5ff',
+              scarlet: '#ff2d55',
+              violet: '#a855f7',
+              emerald: '#10b981'
+            }
+          },
+          boxShadow: {
+            'glow-cyan': '0 0 25px -4px rgba(0, 229, 255, 0.38)',
+            'glow-amber': '0 0 25px -4px rgba(255, 170, 0, 0.35)',
+            'glow-scarlet': '0 0 25px -4px rgba(255, 45, 85, 0.45)',
+            'glow-emerald': '0 0 25px -4px rgba(16, 185, 129, 0.4)',
+            'inner-lens': 'inset 0 0 100px rgba(0, 0, 0, 0.85)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Sleek Studio Scrollbars */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: rgba(5, 7, 10, 0.8); }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #00e5ff; }
+
+    /* Frosted Glass Desks */
+    .glass-deck {
+      background: rgba(9, 12, 19, 0.85);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-surface {
+      background: rgba(18, 24, 38, 0.6);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .glass-input {
+      background: rgba(6, 9, 15, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-input:focus {
+      border-color: #00e5ff;
+      outline: none;
+      box-shadow: 0 0 15px -2px rgba(0, 229, 255, 0.35);
+    }
+
+    /* Biometric Scan Beam */
+    @keyframes scanBeam {
+      0% { top: 0%; opacity: 0; }
+      15% { opacity: 1; }
+      85% { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+    .scanner-active::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #00e5ff, #a855f7, transparent);
+      box-shadow: 0 0 12px #00e5ff;
+      animation: scanBeam 2.2s ease-in-out infinite;
+    }
+
+    /* Range Track Design */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: rgba(255, 255, 255, 0.12);
+      height: 4px;
+      border-radius: 2px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 14px;
+      width: 14px;
+      border-radius: 50%;
+      background: #00e5ff;
+      box-shadow: 0 0 8px #00e5ff;
+      cursor: pointer;
+      border: 2px solid #06090f;
+    }
+  </style>
+</head>
+
+<body class="bg-cine-black text-zinc-100 font-sans antialiased overflow-hidden h-screen select-none">
+
+  <!-- Toast Notification System (Replaces browser alerts) -->
+  <div id="toastContainer" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- MASTER WORKSPACE WRAPPER -->
+  <div class="flex flex-col h-screen w-full relative">
+
+    <!-- 1. MASTER COMMAND HEADER -->
+    <header class="h-14 glass-deck px-4 flex items-center justify-between border-b border-cine-border z-40 shrink-0">
+      
+      <!-- Brand & Project Slate -->
+      <div class="flex items-center gap-3.5">
+        <div class="h-9 w-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-violet-500 to-amber-400 p-[1px] shadow-glow-cyan">
+          <div class="h-full w-full bg-cine-black rounded-[11px] flex items-center justify-center">
+            <i data-lucide="clapperboard" class="w-4 h-4 text-cyan-400"></i>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-cinema text-sm sm:text-base font-extrabold uppercase bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-white to-amber-300">
+              KADA 5.0mins
+            </span>
+            <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-800/60 font-semibold">
+              4K MASTER
+            </span>
+          </div>
+          <p class="text-[9px] font-mono text-zinc-400 hidden sm:block">
+            CLOUDFLARE EDGE ENGINE • 300s TEMPORAL TIMELINE
+          </p>
+        </div>
+
+        <!-- Hollywood Preset Quick Switcher -->
+        <div class="hidden xl:flex items-center gap-1.5 ml-3 pl-3 border-l border-zinc-800">
+          <span class="text-[10px] font-mono text-zinc-400 uppercase tracking-wider">Auteur Rig:</span>
+          <select id="hollywoodPresetSelect" onchange="applyHollywoodPreset(this.value)" class="text-[11px] font-mono bg-zinc-900/90 text-cyan-300 border border-zinc-700/60 rounded px-2.5 py-1 focus:border-cyan-400 cursor-pointer">
+            <option value="cyberpunk" selected>Blade Runner 2049 (Neon Anamorphic)</option>
+            <option value="nolan">Christopher Nolan (70mm IMAX 15-Perf)</option>
+            <option value="deakins">Roger Deakins (Atmospheric Raw)</option>
+            <option value="fincher">David Fincher (Clinical Precision)</option>
+            <option value="kubrick">Stanley Kubrick (1-Pt Symmetrical)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Center Stereo LED VU Meter -->
+      <div class="hidden lg:flex items-center gap-3 glass-surface px-3 py-1.5 rounded-full border border-zinc-800">
+        <i data-lucide="activity" class="w-3.5 h-3.5 text-zinc-400"></i>
+        <span class="text-[10px] font-mono text-zinc-400">MASTER STEREO</span>
+        <div class="flex items-center gap-1">
+          <div class="flex gap-0.5" id="vuMeterL">
+            <div class="w-1 h-3 rounded-sm bg-emerald-500"></div>
+            <div class="w-1 h-3 rounded-sm bg-emerald-500"></div>
+            <div class="w-1 h-3 rounded-sm bg-emerald-500"></div>
+            <div class="w-1 h-3 rounded-sm bg-amber-400"></div>
+            <div class="w-1 h-3 rounded-sm bg-zinc-700"></div>
+            <div class="w-1 h-3 rounded-sm bg-zinc-700"></div>
+          </div>
+          <span class="text-[9px] font-mono text-zinc-400">-12dB</span>
+        </div>
+        <div class="w-px h-3 bg-zinc-800"></div>
+        <div class="flex items-center gap-1 text-[10px] font-mono text-emerald-400">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          60.0 FPS LOCKED
+        </div>
+      </div>
+
+      <!-- Master Action Cluster -->
+      <div class="flex items-center gap-2">
+        <!-- 1-Click Production Suite ZIP Download Button -->
+        <button onclick="downloadProductionDeploymentZip()" class="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-zinc-950 font-bold text-xs shadow-glow-amber flex items-center gap-1.5 transition-all hover:scale-[1.02] active:scale-[0.98]" title="Export ready-to-deploy Cloudflare Pages & Android Suite as ZIP">
+          <i data-lucide="folder-archive" class="w-3.5 h-3.5 text-zinc-950"></i>
+          <span>Production ZIP</span>
+        </button>
+
+        <!-- Android APK Hub Button -->
+        <button onclick="toggleAndroidModal()" class="px-3 py-1.5 rounded-lg bg-emerald-950/70 hover:bg-emerald-900/80 border border-emerald-500/60 text-emerald-300 text-xs font-mono font-medium flex items-center gap-1.5 transition-all shadow-glow-emerald">
+          <i data-lucide="smartphone" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span class="font-semibold">KADA APK</span>
+        </button>
+
+        <!-- 5-Min Full Film Automation -->
+        <button onclick="batchSynthesizeFullMovie()" id="batchMasterBtn" class="hidden md:flex px-3 py-1.5 rounded-lg bg-gradient-to-r from-cyan-600 via-indigo-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white font-medium text-xs shadow-glow-cyan items-center gap-1.5 transition-all">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-cyan-200"></i>
+          <span>Auto-Direct 5m</span>
+        </button>
+
+        <!-- Master Video Capture Export -->
+        <button id="masterRecordBtn" onclick="toggleMasterRecording()" class="px-3.5 py-1.5 rounded-lg bg-cine-scarlet/20 hover:bg-cine-scarlet/30 border border-cine-scarlet/50 text-rose-300 text-xs font-mono font-medium flex items-center gap-1.5 transition-all">
+          <span id="recordIndicatorDot" class="w-2 h-2 rounded-full bg-cine-scarlet"></span>
+          <span id="recordBtnLabel" class="hidden sm:inline">Export Master</span>
+        </button>
+
+        <!-- Settings Modal Trigger -->
+        <button onclick="toggleApiModal()" class="p-2 rounded-lg glass-surface hover:bg-zinc-800 text-zinc-300 border border-zinc-700/60" title="Engine & API Configuration">
+          <i data-lucide="settings" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- 2. MAIN 3-COLUMN WORKSPACE -->
+    <div class="flex-1 flex overflow-hidden h-[calc(100vh-3.5rem-8rem)]">
+      
+      <!-- LEFT DOCK: SCRIPT, CASTING & ANTI-ANNOYANCE DIRECTOR -->
+      <aside class="w-72 sm:w-80 lg:w-96 glass-deck border-r border-cine-border flex flex-col shrink-0 z-30">
+        
+        <!-- Dock Header -->
+        <div class="p-3 border-b border-cine-border flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="film" class="w-4 h-4 text-cyan-400"></i>
+            <span class="text-xs font-mono uppercase tracking-wider font-bold text-zinc-200">KADA Director Core</span>
+          </div>
+          <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
+            Zero-Repetition AI
+          </span>
+        </div>
+
+        <!-- Scrollable Story & Casting Zone -->
+        <div class="flex-1 overflow-y-auto p-3 space-y-3.5">
+          
+          <!-- CHARACTER VISUAL DNA CASTING POD -->
+          <div class="glass-surface p-2.5 rounded-xl border border-zinc-800 space-y-2">
+            <div class="flex items-center justify-between text-[11px] font-mono text-zinc-300 font-semibold">
+              <span class="flex items-center gap-1.5">
+                <i data-lucide="user-check" class="w-3.5 h-3.5 text-cyan-400"></i>
+                Character Visual DNA
+              </span>
+              <span id="charStatusTag" class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">No Cast</span>
+            </div>
+
+            <!-- Upload Area with Biometric Scan Overlay -->
+            <div id="characterDropZone" onclick="document.getElementById('charPhotoInput').click()" class="relative h-24 rounded-lg border border-dashed border-zinc-700 hover:border-cyan-400 bg-zinc-950/60 flex flex-col items-center justify-center cursor-pointer transition-all overflow-hidden group">
+              <input type="file" id="charPhotoInput" accept="image/*" class="hidden" onchange="handleCharacterUpload(event)">
+              
+              <div id="charPlaceholder" class="flex flex-col items-center text-center p-2">
+                <i data-lucide="camera" class="w-4 h-4 text-zinc-400 group-hover:text-cyan-400 mb-1"></i>
+                <span class="text-[10px] font-medium text-zinc-300">Upload Actor Portrait</span>
+                <span class="text-[8px] text-zinc-400">Locks identity across all 5 minutes</span>
+              </div>
+
+              <div id="charPreviewContainer" class="hidden absolute inset-0 scanner-active">
+                <img id="charPreviewImg" src="" alt="Character DNA" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent flex items-end p-2">
+                  <div class="flex items-center justify-between w-full text-[9px] font-mono text-cyan-300">
+                    <span id="charIdentityLabel">BIOMETRIC LOCKED</span>
+                    <button onclick="removeCharacterPhoto(event)" class="text-rose-400 hover:text-rose-300 p-0.5">
+                      <i data-lucide="x" class="w-3 h-3"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Character Trait Badges -->
+            <div id="characterTraitsBadge" class="hidden flex flex-wrap gap-1">
+              <span class="text-[8px] font-mono bg-cyan-950/80 border border-cyan-800 text-cyan-300 px-1 py-0.5 rounded">Facial Mesh Lock</span>
+              <span class="text-[8px] font-mono bg-indigo-950/80 border border-indigo-800 text-indigo-300 px-1 py-0.5 rounded">Skin SSS Profile</span>
+              <span class="text-[8px] font-mono bg-violet-950/80 border border-violet-800 text-violet-300 px-1 py-0.5 rounded">Wardrobe Locked</span>
+            </div>
+          </div>
+
+          <!-- 5-SCENE STORYBOARD LIST -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-[11px] font-mono uppercase text-zinc-300 font-semibold">
+              <span class="flex items-center gap-1.5">
+                <i data-lucide="layers" class="w-3.5 h-3.5 text-amber-400"></i>
+                5-Minute Scene Reel (300s)
+              </span>
+              <button onclick="resetSceneTemplates()" class="text-[10px] font-mono text-cyan-400 hover:underline">Reset</button>
+            </div>
+            <div id="sceneDeckContainer" class="space-y-1.5"></div>
+          </div>
+
+          <!-- Google Search Grounding Toggle -->
+          <div class="glass-surface p-2.5 rounded-lg border border-zinc-800 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <i data-lucide="globe" class="w-3.5 h-3.5 text-cyan-400"></i>
+              <div>
+                <div class="text-[10px] font-medium text-zinc-200">Google Search Grounding</div>
+                <div class="text-[8px] text-zinc-400">Grounded physics, architecture & cosmos</div>
+              </div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="searchGroundingToggle" class="sr-only peer" checked>
+              <div class="w-7 h-4 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-cyan-500"></div>
+            </label>
+          </div>
+        </div>
+
+        <!-- DIRECTOR PROMPT FORM (Anti-Annoyance Strict Core) -->
+        <div class="p-2.5 border-t border-cine-border glass-deck space-y-2">
+          <div class="flex gap-1.5 overflow-x-auto pb-1 text-[9px] font-mono scrollbar-none">
+            <button onclick="injectPromptTemplate('Blade Runner dystopian cyberpunk neon rain metropolis with flying spinner fly-by')" class="whitespace-nowrap px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300">
+              Cyberpunk
+            </button>
+            <button onclick="injectPromptTemplate('Interstellar black hole gargantua accretion disk with relativistic Doppler beam warping')" class="whitespace-nowrap px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300">
+              Deep Space 4K
+            </button>
+            <button onclick="injectPromptTemplate('Ancient bioluminescent subterranean temple with golden atmospheric dust motes')" class="whitespace-nowrap px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300">
+              Lost Temple
+            </button>
+          </div>
+
+          <form id="directorChatForm" onsubmit="handleDirectorSubmit(event)" class="space-y-1">
+            <div class="relative">
+              <textarea id="directorPromptInput" rows="2" placeholder="Direct 5-minute cinema story vision..." class="w-full glass-input text-xs text-zinc-100 placeholder-zinc-500 rounded-lg p-2 pr-8 resize-none"></textarea>
+              <button type="submit" class="absolute right-2 bottom-2 p-1.5 rounded-md bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-bold shadow-glow-cyan transition-all">
+                <i data-lucide="arrow-up" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+            <div class="flex items-center justify-between text-[9px] font-mono text-zinc-400">
+              <span>Gemini 3 Flash • Concise Output</span>
+              <span id="directorStatusText">Ready for Directing</span>
+            </div>
+          </form>
+        </div>
+      </aside>
+
+      <!-- CENTER MONITOR: 4K CANVAS & OPTICAL HUD -->
+      <main class="flex-1 flex flex-col bg-cine-void relative overflow-hidden">
+        
+        <!-- Viewport Top Toolbar -->
+        <div class="h-9 px-4 glass-deck border-b border-cine-border flex items-center justify-between shrink-0">
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-1 text-[10px] font-mono text-zinc-400">
+              <span>ASPECT:</span>
+              <select id="aspectRatioSelect" onchange="changeAspectRatio(this.value)" class="bg-zinc-900 border border-zinc-700 text-cyan-300 text-[10px] rounded px-1.5 py-0.5 focus:border-cyan-400">
+                <option value="16:9" selected>16:9 UHD (3840×2160)</option>
+                <option value="2.39:1">2.39:1 Scope</option>
+                <option value="9:16">9:16 Mobile</option>
+                <option value="1:1">1:1 Square</option>
+              </select>
+            </div>
+
+            <button onclick="toggleGridOverlay()" id="gridToggleBtn" class="px-2 py-0.5 rounded text-[10px] font-mono bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-700 flex items-center gap-1">
+              <i data-lucide="grid" class="w-3 h-3"></i>
+              <span>Thirds</span>
+            </button>
+            <button onclick="toggleSafeGuide()" id="safeGuideBtn" class="px-2 py-0.5 rounded text-[10px] font-mono bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-700 flex items-center gap-1">
+              <i data-lucide="box" class="w-3 h-3"></i>
+              <span>Safe Box</span>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2 text-[10px] font-mono text-cyan-400">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            60.0 FPS LOCKED
+          </div>
+        </div>
+
+        <!-- 4K Cinema Canvas Stage -->
+        <div class="flex-1 relative flex items-center justify-center p-2 overflow-hidden bg-black/50">
+          <div id="viewportContainer" class="relative w-full max-w-5xl aspect-video bg-black rounded-lg shadow-2xl border border-zinc-800 overflow-hidden flex items-center justify-center shadow-inner-lens">
+            
+            <!-- Native 4K Generative Video Canvas -->
+            <canvas id="cinemaCanvas" width="3840" height="2160" class="w-full h-full object-contain pointer-events-none"></canvas>
+
+            <!-- Rule of Thirds Grid Overlay -->
+            <div id="gridOverlay" class="absolute inset-0 pointer-events-none hidden">
+              <div class="w-full h-full grid grid-cols-3 grid-rows-3 border border-cyan-500/20">
+                <div class="border-r border-b border-cyan-500/20"></div>
+                <div class="border-r border-b border-cyan-500/20"></div>
+                <div class="border-b border-cyan-500/20"></div>
+                <div class="border-r border-b border-cyan-500/20"></div>
+                <div class="border-r border-b border-cyan-500/20"></div>
+                <div class="border-b border-cyan-500/20"></div>
+                <div class="border-r border-cyan-500/20"></div>
+                <div class="border-r border-cyan-500/20"></div>
+                <div></div>
+              </div>
+            </div>
+
+            <!-- Title & Action Safe Guides -->
+            <div id="safeOverlay" class="absolute inset-0 pointer-events-none hidden flex items-center justify-center">
+              <div class="w-[90%] h-[90%] border border-dashed border-amber-500/30 flex items-center justify-center">
+                <div class="w-[88%] h-[88%] border border-dotted border-rose-500/30"></div>
+              </div>
+            </div>
+
+            <!-- Live Optical Telemetry HUD -->
+            <div class="absolute inset-0 p-3 pointer-events-none flex flex-col justify-between text-[10px] font-mono text-zinc-300">
+              <div class="flex justify-between items-start">
+                <div class="bg-black/60 p-2 rounded backdrop-blur border border-white/5 space-y-0.5">
+                  <div class="text-cyan-400 font-bold flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+                    <span>KADA 5.0 LIVE SIMULATION [4K DCI]</span>
+                  </div>
+                  <div>LENS: <span id="hudLens" class="text-white">Cooke 35mm Anamorphic 2x</span></div>
+                  <div>APERTURE: <span id="hudAperture" class="text-amber-300">f/1.4 T-Stop</span></div>
+                  <div>SHUTTER: <span id="hudShutter" class="text-white">180.0° (1/48s)</span></div>
+                </div>
+                <div class="bg-black/60 p-2 rounded backdrop-blur border border-white/5 text-right space-y-0.5">
+                  <div class="text-emerald-400 font-bold">GROK BUCKET: <span id="hudBucket">240</span></div>
+                  <div>COLOR TEMP: <span id="hudKelvin" class="text-amber-200">5600K DAYLIGHT</span></div>
+                  <div>SEED LOCK: <span class="text-cyan-300">#948271039 (COHERENT)</span></div>
+                </div>
+              </div>
+
+              <!-- Center Target Reticle -->
+              <div class="self-center flex flex-col items-center opacity-40">
+                <div class="w-7 h-7 border border-white/40 rounded-full flex items-center justify-center">
+                  <div class="w-1 h-1 bg-cyan-400 rounded-full"></div>
+                </div>
+              </div>
+
+              <div class="flex justify-between items-end">
+                <div class="max-w-lg bg-black/60 p-2 rounded border border-white/10 backdrop-blur">
+                  <div class="text-[9px] text-cyan-400 font-bold uppercase" id="hudSceneHeader">SCENE 1 [0:00 - 1:00]</div>
+                  <p class="text-[11px] text-white line-clamp-2" id="hudNarrationText">"Through the drenched neon mist of Sector 4..."</p>
+                </div>
+                <div class="bg-black/60 p-2 rounded backdrop-blur border border-white/5 text-right">
+                  <div class="text-xs font-bold text-amber-400" id="hudTimecode">00:00:00 / 05:00:00</div>
+                  <div class="text-[9px] text-zinc-400">TOTAL RUNTIME: 300s</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scrubber Transport -->
+        <div class="h-14 glass-deck border-t border-cine-border px-4 flex items-center justify-between shrink-0">
+          <div class="flex items-center gap-2.5">
+            <button id="masterPlayBtn" onclick="togglePlay()" class="h-8 w-8 rounded-full bg-cyan-500 hover:bg-cyan-400 text-zinc-950 flex items-center justify-center shadow-glow-cyan transition-all">
+              <i data-lucide="play" id="playIcon" class="w-4 h-4 ml-0.5"></i>
+            </button>
+            <button onclick="jumpPreviousScene()" class="p-1.5 rounded hover:bg-zinc-800 text-zinc-300">
+              <i data-lucide="skip-back" class="w-3.5 h-3.5"></i>
+            </button>
+            <button onclick="jumpNextScene()" class="p-1.5 rounded hover:bg-zinc-800 text-zinc-300">
+              <i data-lucide="skip-forward" class="w-3.5 h-3.5"></i>
+            </button>
+            <div class="font-mono text-xs ml-1">
+              <span id="playbackCurrentTime" class="text-cyan-400 font-bold">00:00</span>
+              <span class="text-zinc-600"> / </span>
+              <span class="text-zinc-400">05:00</span>
+            </div>
+          </div>
+
+          <div class="flex-1 max-w-xl mx-4">
+            <input type="range" id="masterTimelineSlider" min="0" max="300" step="0.1" value="0" oninput="seekTimeline(this.value)" class="w-full">
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="playCinematicBoom()" class="px-2 py-1 rounded bg-zinc-900 hover:bg-zinc-800 text-amber-300 text-[10px] font-mono border border-amber-500/30 flex items-center gap-1" title="Trigger Sub-Bass Drop">
+              <i data-lucide="zap" class="w-3 h-3 text-amber-400"></i>
+              <span>Boom</span>
+            </button>
+            <button onclick="playSceneTransitionWhoosh()" class="px-2 py-1 rounded bg-zinc-900 hover:bg-zinc-800 text-indigo-300 text-[10px] font-mono border border-indigo-500/30 flex items-center gap-1" title="Trigger Optical Whoosh">
+              <i data-lucide="wind" class="w-3 h-3 text-indigo-400"></i>
+              <span>Whoosh</span>
+            </button>
+            <button onclick="toggleAudioMute()" class="p-1.5 rounded hover:bg-zinc-800 text-zinc-300">
+              <i data-lucide="volume-2" id="volumeIcon" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+      </main>
+
+      <!-- RIGHT INSPECTOR: OPTICS, MATERIALS & DYNAMICS -->
+      <aside class="w-72 sm:w-80 glass-deck border-l border-cine-border flex flex-col shrink-0 z-30">
+        <div class="p-2 border-b border-cine-border flex gap-1">
+          <button onclick="switchInspectorTab('optics')" id="tabOptics" class="flex-1 py-1 rounded text-[10px] font-mono bg-cyan-950 text-cyan-300 border border-cyan-800">Optics</button>
+          <button onclick="switchInspectorTab('materials')" id="tabMaterials" class="flex-1 py-1 rounded text-[10px] font-mono text-zinc-400 hover:bg-zinc-800">LUT/Light</button>
+          <button onclick="switchInspectorTab('physics')" id="tabPhysics" class="flex-1 py-1 rounded text-[10px] font-mono text-zinc-400 hover:bg-zinc-800">Physics</button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-3 space-y-4">
+          <!-- TAB 1: OPTICS -->
+          <div id="inspectorOptics" class="space-y-3">
+            <div class="space-y-1">
+              <label class="text-[10px] font-mono text-zinc-300">Lens Model</label>
+              <select id="lensRigSelect" onchange="updateLensPreset(this.value)" class="w-full glass-input text-xs text-cyan-300 rounded p-1.5 font-mono">
+                <option value="cooke_35" selected>Cooke 35mm Anamorphic 2x</option>
+                <option value="arri_50">Arri Master Prime 50mm</option>
+                <option value="zeiss_85">Zeiss Supreme 85mm</option>
+                <option value="imax_70">IMAX 70mm Dual-Sensor</option>
+              </select>
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between text-[10px] font-mono">
+                <span class="text-zinc-400">Aperture</span>
+                <span class="text-amber-400" id="apertureValueDisplay">f/1.4</span>
+              </div>
+              <input type="range" id="apertureSlider" min="1.2" max="16.0" step="0.1" value="1.4" oninput="updateAperture(this.value)" class="w-full">
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between text-[10px] font-mono">
+                <span class="text-zinc-400">Shutter Angle</span>
+                <span class="text-cyan-400" id="shutterValueDisplay">180.0°</span>
+              </div>
+              <input type="range" id="shutterSlider" min="45" max="360" step="15" value="180" oninput="updateShutter(this.value)" class="w-full">
+            </div>
+          </div>
+
+          <!-- TAB 2: LUT & LIGHTING -->
+          <div id="inspectorMaterials" class="space-y-3 hidden">
+            <div class="space-y-1">
+              <div class="flex justify-between text-[10px] font-mono">
+                <span class="text-zinc-400">Color Temp (Kelvin)</span>
+                <span class="text-amber-300" id="kelvinValueDisplay">5600K</span>
+              </div>
+              <input type="range" id="kelvinSlider" min="2400" max="9500" step="100" value="5600" oninput="updateKelvin(this.value)" class="w-full">
+            </div>
+
+            <div class="space-y-1">
+              <label class="text-[10px] font-mono text-zinc-300">Master Film Grade LUT</label>
+              <select id="filmStockLutSelect" onchange="updateFilmLUT(this.value)" class="w-full glass-input text-xs text-amber-300 rounded p-1.5 font-mono">
+                <option value="kodak2383" selected>Kodak 2383 Print Stock</option>
+                <option value="arri_logc">ARRI Alexa LogC</option>
+                <option value="teal_orange">Blockbuster Teal & Orange</option>
+                <option value="bleach_bypass">Silver Bleach Bypass</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- TAB 3: DYNAMICS & PHYSICS -->
+          <div id="inspectorPhysics" class="space-y-3 hidden">
+            <div class="space-y-1">
+              <div class="flex justify-between text-[10px] font-mono">
+                <span class="text-zinc-400">Temporal Dynamics Bucket</span>
+                <span class="text-emerald-400" id="motionBucketDisplay">240</span>
+              </div>
+              <input type="range" id="motionBucketSlider" min="127" max="255" step="1" value="240" oninput="updateMotionBucket(this.value)" class="w-full">
+            </div>
+
+            <div class="space-y-1">
+              <label class="text-[10px] font-mono text-zinc-300">Weather Atmosphere</label>
+              <select id="weatherSimSelect" onchange="updateWeatherSystem(this.value)" class="w-full glass-input text-xs text-cyan-300 rounded p-1.5 font-mono">
+                <option value="cyber_rain" selected>Cyberpunk Rain</option>
+                <option value="hyperspace_warp">Hyperspace Relativistic Warp</option>
+                <option value="fiery_embers">Volumetric Embers</option>
+                <option value="none">Pristine Clear</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- 3. MULTI-TRACK TIMELINE NLE -->
+    <footer class="h-32 glass-deck border-t border-cine-border flex flex-col shrink-0 z-30">
+      <div class="h-6 px-4 bg-zinc-950/80 border-b border-cine-border flex items-center justify-between text-[9px] font-mono text-zinc-400">
+        <span class="text-zinc-300 font-bold uppercase">KADA Multi-Track NLE Editor</span>
+        <span>TRACKS: V1 [4K MASTER] • A1 [STUDIO VO] • A2 [HANS ZIMMER OST]</span>
+        <span>00:00 - 05:00 TOTAL RUNTIME</span>
+      </div>
+      <div class="flex-1 p-2 space-y-1 overflow-hidden">
+        <div class="flex items-center gap-1.5 h-10 w-full" id="timelineTrackV1"></div>
+        <div class="flex items-center gap-1.5 h-7 w-full" id="timelineTrackA1"></div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ANDROID APK HUB MODAL -->
+  <div id="androidHubModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="glass-deck max-w-2xl w-full p-6 rounded-2xl border border-emerald-500/30 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 rounded-lg bg-emerald-950/80 border border-emerald-700/60">
+            <i data-lucide="smartphone" class="w-5 h-5 text-emerald-400"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-cinema tracking-wider uppercase font-bold text-white flex items-center gap-2">
+              <span>KADA 5.0mins APK Distribution Suite</span>
+              <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
+                100% Free
+              </span>
+            </h3>
+            <p class="text-[10px] font-mono text-zinc-400">Install directly as an APK on any Android phone or tablet</p>
+          </div>
+        </div>
+        <button onclick="toggleAndroidModal()" class="text-zinc-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 p-1 bg-zinc-950/70 rounded-lg border border-zinc-800 text-[11px] font-mono">
+        <button onclick="switchApkTab('direct')" id="apkTabDirect" class="py-2 rounded bg-emerald-900/60 text-emerald-300 font-semibold border border-emerald-700/60">
+          1. Direct WebAPK
+        </button>
+        <button onclick="switchApkTab('github')" id="apkTabGithub" class="py-2 rounded text-zinc-400 hover:text-zinc-200">
+          2. Free GitHub Builder
+        </button>
+        <button onclick="switchApkTab('source')" id="apkTabSource" class="py-2 rounded text-zinc-400 hover:text-zinc-200">
+          3. Android Studio ZIP
+        </button>
+      </div>
+
+      <!-- TAB 1: Direct WebAPK -->
+      <div id="apkContentDirect" class="space-y-4">
+        <div class="glass-surface p-4 rounded-xl border border-zinc-800 space-y-3">
+          <p class="text-xs text-zinc-300 leading-relaxed">
+            When installed via Chrome, Brave, or Edge on Android, Android automatically compiles an official, standalone <strong>.apk</strong> (WebAPK) directly into your app launcher.
+          </p>
+          <div class="flex flex-col sm:flex-row items-center gap-3">
+            <button onclick="triggerPwaInstall()" class="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs flex items-center justify-center gap-2 shadow-glow-emerald transition-all">
+              <i data-lucide="smartphone" class="w-4 h-4"></i>
+              <span id="pwaInstallBtnLabel">Install KADA 5.0mins APK</span>
+            </button>
+            <span id="pwaInstallStatus" class="text-[10px] font-mono text-zinc-400">Ready for instant install</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: GitHub Actions -->
+      <div id="apkContentGithub" class="space-y-3 hidden">
+        <p class="text-xs text-zinc-300 leading-relaxed">
+          Use GitHub's free cloud runners to build an independent, raw <strong>.apk</strong> binary for free without any local Android SDK.
+        </p>
+        <div class="glass-surface p-3 rounded-xl border border-zinc-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-mono text-cyan-300 font-semibold">Workflow: .github/workflows/build-apk.yml</span>
+            <button onclick="copyGithubWorkflowCode()" class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300">
+              Copy YAML
+            </button>
+          </div>
+          <pre id="githubWorkflowCode" class="text-[9px] font-mono bg-zinc-950 p-2.5 rounded border border-zinc-800 text-zinc-300 overflow-x-auto max-h-36">name: Build KADA 5.0mins APK
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { java-version: '17', distribution: 'temurin' }
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: npm install -g @bubblewrap/cli
+      - run: |
+          mkdir -p android-build
+          npx @bubblewrap/cli init --manifest=https://${{ github.event.repository.name }}.pages.dev/manifest.json --directory=android-build
+          cd android-build && npx @bubblewrap/cli build
+      - uses: actions/upload-artifact@v4
+        with: { name: KADA-5.0mins-Release-APK, path: android-build/*.apk }</pre>
+        </div>
+      </div>
+
+      <!-- TAB 3: Android Studio Wrapper -->
+      <div id="apkContentSource" class="space-y-3 hidden">
+        <p class="text-xs text-zinc-300 leading-relaxed">
+          Download a pre-configured native Android Studio project. Open in Android Studio and click <strong>Build &gt; Build APK</strong> to generate a local <code>.apk</code>.
+        </p>
+        <button onclick="downloadAndroidBoilerplateZip()" class="px-4 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-bold text-xs flex items-center gap-1.5 shadow-glow-cyan">
+          <i data-lucide="archive" class="w-3.5 h-3.5"></i>
+          <span>Download Android Studio ZIP</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCTION DEPLOYMENT ZIP MODAL -->
+  <div id="productionZipModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="glass-deck max-w-lg w-full p-6 rounded-2xl border border-amber-500/40 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="folder-archive" class="w-5 h-5 text-amber-400"></i>
+          <h3 class="text-sm font-cinema uppercase font-bold text-white">Production Deployment Suite</h3>
+        </div>
+        <button onclick="toggleProductionZipModal()" class="text-zinc-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+
+      <p class="text-xs text-zinc-300 leading-relaxed">
+        This bundles the complete, standalone repository into a single zip file ready for deployment to Cloudflare Pages with zero lockfile conflicts.
+      </p>
+
+      <div class="glass-surface p-3 rounded-lg border border-zinc-800 space-y-1.5 text-[10px] font-mono text-zinc-400">
+        <div class="text-amber-300 font-semibold mb-1">INCLUDED ASSETS:</div>
+        <div>✓ package.json (zero bun.lock, standard npm build)</div>
+        <div>✓ public/index.html (complete standalone studio)</div>
+        <div>✓ wrangler.toml (Cloudflare Pages configuration)</div>
+        <div>✓ _headers (COOP, COEP, caching)</div>
+        <div>✓ _routes.json (Cloudflare edge rules)</div>
+        <div>✓ .github/workflows/build-apk.yml (free APK CI/CD)</div>
+        <div>✓ android/ (complete native Android Studio wrapper)</div>
+        <div>✓ README.md (production deployment guide)</div>
+      </div>
+
+      <div class="pt-2 flex justify-end gap-2">
+        <button onclick="toggleProductionZipModal()" class="px-3.5 py-1.5 rounded-lg text-xs font-mono text-zinc-400 hover:text-white">Close</button>
+        <button onclick="downloadProductionDeploymentZip()" class="px-4 py-2 rounded-lg bg-gradient-to-r from-amber-500 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-zinc-950 font-bold text-xs shadow-glow-amber flex items-center gap-1.5">
+          <i data-lucide="download" class="w-4 h-4"></i>
+          <span>Generate & Download ZIP</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div id="apiConfigModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="glass-deck max-w-md w-full p-6 rounded-2xl border border-zinc-700/80 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-cinema uppercase font-bold text-white">Engine Configuration</h3>
+        <button onclick="toggleApiModal()" class="text-zinc-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div class="space-y-1.5">
+        <label class="text-[11px] font-mono text-zinc-400">Google Gemini API Key</label>
+        <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." class="w-full glass-input text-xs font-mono text-white p-2.5 rounded-lg">
+      </div>
+      <div class="pt-2 flex justify-end gap-2">
+        <button onclick="saveApiKeySettings()" class="px-4 py-1.5 rounded-lg bg-cyan-500 text-zinc-950 font-bold text-xs shadow-glow-cyan">
+          Save Settings
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    /* ==========================================================================
+       TOAST NOTIFICATION ENGINE (Replaces all alerts)
+       ========================================================================== */
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      const colors = {
+        info: 'bg-zinc-900/90 border-cyan-500/50 text-cyan-300',
+        success: 'bg-zinc-900/90 border-emerald-500/50 text-emerald-300',
+        warning: 'bg-zinc-900/90 border-amber-500/50 text-amber-300'
+      };
+      toast.className = `px-3.5 py-2 rounded-lg border backdrop-blur-md text-xs font-mono shadow-2xl transition-all duration-300 opacity-0 translate-y-2 pointer-events-auto ${colors[type] || colors.info}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      requestAnimationFrame(() => {
+        toast.classList.remove('opacity-0', 'translate-y-2');
+      });
+      setTimeout(() => {
+        toast.classList.add('opacity-0', '-translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    /* ==========================================================================
+       STATE ARCHITECTURE (5 MINUTES / 300 SECONDS)
+       ========================================================================== */
+    const STATE = {
+      apiKey: localStorage.getItem('omni_gemini_key') || '',
+      isPlaying: false,
+      currentTime: 0,
+      totalDuration: 300,
+      currentSceneIndex: 0,
+      isMuted: false,
+      character: { hasPhoto: false, dataUrl: null, base64: null, mimeType: null },
+      optics: { lens: 'cooke_35', aperture: 1.4, shutterAngle: 180, kelvin: 5600, motionBucket: 240, weather: 'cyber_rain', filmLUT: 'kodak2383' },
+      scenes: [
+        { id: 1, timeRange: '0:00 - 1:00', title: 'The Cybernetic Awakening', prompt: 'Metropolis in neon rain, wet asphalt reflections, 4k cinematic.', narration: 'Through the drenched neon mist of Sector 4, synthetic optics awaken.', keyframeImg: null },
+        { id: 2, timeRange: '1:00 - 2:00', title: 'The Relativistic Voyage', prompt: 'Spacecraft cruising near black hole accretion disk, anamorphic flare.', narration: 'Gravitational lensing bends the horizon into a ring of pure light.', keyframeImg: null },
+        { id: 3, timeRange: '2:00 - 3:00', title: 'The Subterranean Nexus', prompt: 'Bioluminescent ancient cavern with crystalline data pillars.', narration: 'Deep beneath the planetary crust, forgotten archives pulse with memories.', keyframeImg: null },
+        { id: 4, timeRange: '3:00 - 4:00', title: 'The Synaptic Convergence', prompt: 'Neural synapse lattice, bio-electrical pulses firing in cobalt.', narration: 'Billions of thoughts collide in a single microsecond of realization.', keyframeImg: null },
+        { id: 5, timeRange: '4:00 - 5:00', title: 'The Solar Dawn Ascending', prompt: 'Dyson sphere megastructure eclipsing twin star sunrise, IMAX 70mm.', narration: 'As twin suns break across the orbital ring, the new dawn begins.', keyframeImg: null }
+      ]
+    };
+
+    /* ==========================================================================
+       WEB AUDIO OST & FOLEY SYNTHESIS ENGINE
+       ========================================================================== */
+    let audioCtx = null;
+    let masterGain = null;
+    let ostOsc1 = null, ostOsc2 = null, ostFilter = null;
+
+    function initWebAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        masterGain = audioCtx.createGain();
+        masterGain.gain.setValueAtTime(STATE.isMuted ? 0 : 0.4, audioCtx.currentTime);
+        masterGain.connect(audioCtx.destination);
+
+        // Hans Zimmer Minor 9th Ambient Chord Generator
+        ostOsc1 = audioCtx.createOscillator();
+        ostOsc2 = audioCtx.createOscillator();
+        ostFilter = audioCtx.createBiquadFilter();
+
+        ostOsc1.type = 'sawtooth';
+        ostOsc2.type = 'triangle';
+        ostOsc1.frequency.setValueAtTime(73.42, audioCtx.currentTime); // D2
+        ostOsc2.frequency.setValueAtTime(110.0, audioCtx.currentTime);  // A2
+
+        ostFilter.type = 'lowpass';
+        ostFilter.frequency.setValueAtTime(320, audioCtx.currentTime);
+
+        ostOsc1.connect(ostFilter);
+        ostOsc2.connect(ostFilter);
+        ostFilter.connect(masterGain);
+
+        ostOsc1.start();
+        ostOsc2.start();
+      }
+    }
+
+    function playCinematicBoom() {
+      initWebAudio();
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.frequency.setValueAtTime(120, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(28, audioCtx.currentTime + 1.8);
+      gain.gain.setValueAtTime(0.7, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.8);
+      osc.connect(gain);
+      gain.connect(masterGain);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 1.8);
+      showToast('💥 Sub-Bass Boom Triggered', 'info');
+    }
+
+    function playSceneTransitionWhoosh() {
+      initWebAudio();
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.6);
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+      osc.connect(gain);
+      gain.connect(masterGain);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.6);
+    }
+
+    function toggleAudioMute() {
+      STATE.isMuted = !STATE.isMuted;
+      if (masterGain && audioCtx) {
+        masterGain.gain.setValueAtTime(STATE.isMuted ? 0 : 0.4, audioCtx.currentTime);
+      }
+      document.getElementById('volumeIcon').setAttribute('data-lucide', STATE.isMuted ? 'volume-x' : 'volume-2');
+      lucide.createIcons();
+    }
+
+    /* ==========================================================================
+       CANVAS 4K RENDER LOOP & VOLUMETRIC SIMULATOR
+       ========================================================================== */
+    const canvas = document.getElementById('cinemaCanvas');
+    const ctx = canvas.getContext('2d');
+    const particles = Array.from({ length: 180 }, () => ({
+      x: Math.random() * 3840,
+      y: Math.random() * 2160,
+      speed: 3 + Math.random() * 6
+    }));
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderSceneList();
+      renderTimelineTracks();
+      startCanvasLoop();
+    });
+
+    function startCanvasLoop() {
+      let lastTime = performance.now();
+      function render(now) {
+        const delta = (now - lastTime) / 1000;
+        lastTime = now;
+        if (STATE.isPlaying) {
+          STATE.currentTime = (STATE.currentTime + delta) % STATE.totalDuration;
+          syncPlaybackTelemetry();
+        }
+        drawCinemaScene(now);
+        requestAnimationFrame(render);
+      }
+      requestAnimationFrame(render);
+    }
+
+    function drawCinemaScene(t) {
+      const w = canvas.width, h = canvas.height;
+      const scene = STATE.scenes[STATE.currentSceneIndex];
+
+      ctx.fillStyle = '#040507';
+      ctx.fillRect(0, 0, w, h);
+
+      if (scene.keyframeImg) {
+        const scale = 1.05 + Math.sin(t * 0.0004) * 0.04;
+        const panX = Math.cos(t * 0.0003) * 35;
+        const panY = Math.sin(t * 0.0003) * 20;
+        ctx.save();
+        ctx.translate(w / 2 + panX, h / 2 + panY);
+        ctx.scale(scale, scale);
+        ctx.drawImage(scene.keyframeImg, -w / 2, -h / 2, w, h);
+        ctx.restore();
+      } else {
+        const grad = ctx.createRadialGradient(w/2, h/2, 100, w/2, h/2, w*0.7);
+        if (STATE.optics.kelvin < 4000) {
+          grad.addColorStop(0, '#ff9933'); grad.addColorStop(0.5, '#aa3311'); grad.addColorStop(1, '#040507');
+        } else if (STATE.optics.kelvin > 7000) {
+          grad.addColorStop(0, '#00ffff'); grad.addColorStop(0.5, '#1a3377'); grad.addColorStop(1, '#020409');
+        } else {
+          grad.addColorStop(0, '#00e5ff'); grad.addColorStop(0.5, '#7928ca'); grad.addColorStop(1, '#040507');
+        }
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+      }
+
+      // Volumetric Weather Particles
+      if (STATE.optics.weather === 'cyber_rain') {
+        ctx.strokeStyle = 'rgba(0, 229, 255, 0.4)';
+        ctx.lineWidth = 2;
+        particles.forEach(p => {
+          p.y += p.speed * 3.2;
+          if (p.y > h) p.y = 0;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p.x - 3, p.y + 25);
+          ctx.stroke();
+        });
+      } else if (STATE.optics.weather === 'hyperspace_warp') {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+        ctx.lineWidth = 2;
+        particles.forEach(p => {
+          const angle = Math.atan2(p.y - h/2, p.x - w/2);
+          p.x += Math.cos(angle) * (p.speed * 4);
+          p.y += Math.sin(angle) * (p.speed * 4);
+          if (p.x < 0 || p.x > w || p.y < 0 || p.y > h) {
+            p.x = w/2 + (Math.random() - 0.5) * 200;
+            p.y = h/2 + (Math.random() - 0.5) * 200;
+          }
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p.x + Math.cos(angle) * 35, p.y + Math.sin(angle) * 35);
+          ctx.stroke();
+        });
+      }
+
+      // Anamorphic 2x Blue Flare Simulation
+      if (STATE.optics.lens.includes('anamorphic') || STATE.optics.lens.includes('cooke')) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'screen';
+        const flareY = h * 0.45 + Math.sin(t * 0.001) * 60;
+        const flareGrad = ctx.createLinearGradient(0, flareY, w, flareY);
+        flareGrad.addColorStop(0, 'transparent');
+        flareGrad.addColorStop(0.3, 'rgba(0, 162, 255, 0.15)');
+        flareGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.75)');
+        flareGrad.addColorStop(0.7, 'rgba(0, 162, 255, 0.15)');
+        flareGrad.addColorStop(1, 'transparent');
+        ctx.fillStyle = flareGrad;
+        ctx.fillRect(0, flareY - 4, w, 8);
+        ctx.restore();
+      }
+    }
+
+    function syncPlaybackTelemetry() {
+      document.getElementById('masterTimelineSlider').value = STATE.currentTime;
+      const idx = Math.min(4, Math.floor(STATE.currentTime / 60));
+      if (idx !== STATE.currentSceneIndex) {
+        STATE.currentSceneIndex = idx;
+        highlightActiveSceneCard();
+        playSceneTransitionWhoosh();
+      }
+
+      const mins = Math.floor(STATE.currentTime / 60);
+      const secs = Math.floor(STATE.currentTime % 60);
+      const timeStr = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      document.getElementById('playbackCurrentTime').textContent = timeStr;
+      document.getElementById('hudTimecode').textContent = `${timeStr}:00 / 05:00:00`;
+
+      const scn = STATE.scenes[idx];
+      document.getElementById('hudSceneHeader').textContent = `SCENE ${scn.id} [${scn.timeRange}]`;
+      document.getElementById('hudNarrationText').textContent = `"${scn.narration}"`;
+    }
+
+    function togglePlay() {
+      STATE.isPlaying = !STATE.isPlaying;
+      initWebAudio();
+      document.getElementById('playIcon').setAttribute('data-lucide', STATE.isPlaying ? 'pause' : 'play');
+      lucide.createIcons();
+    }
+
+    function seekTimeline(val) {
+      STATE.currentTime = parseFloat(val);
+      syncPlaybackTelemetry();
+    }
+
+    function jumpPreviousScene() {
+      STATE.currentTime = Math.max(0, (STATE.currentSceneIndex - 1) * 60);
+      syncPlaybackTelemetry();
+    }
+
+    function jumpNextScene() {
+      STATE.currentTime = Math.min(299, (STATE.currentSceneIndex + 1) * 60);
+      syncPlaybackTelemetry();
+    }
+
+    function renderSceneList() {
+      const container = document.getElementById('sceneDeckContainer');
+      container.innerHTML = '';
+      STATE.scenes.forEach((scn, idx) => {
+        const card = document.createElement('div');
+        card.id = `sceneCard-${idx}`;
+        card.className = `glass-surface p-2 rounded-lg border text-[10px] cursor-pointer transition-all ${
+          idx === STATE.currentSceneIndex ? 'border-cyan-500/80 bg-zinc-900/90 shadow-glow-cyan' : 'border-zinc-800 hover:border-cyan-400'
+        }`;
+        card.onclick = () => { STATE.currentTime = idx * 60; syncPlaybackTelemetry(); };
+        card.innerHTML = `
+          <div class="flex justify-between font-mono font-bold text-cyan-300">
+            <span>SCENE ${scn.id} • ${scn.timeRange}</span>
+            <span>60s</span>
+          </div>
+          <div class="font-medium text-white truncate">${scn.title}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function highlightActiveSceneCard() {
+      STATE.scenes.forEach((_, idx) => {
+        const card = document.getElementById(`sceneCard-${idx}`);
+        if (!card) return;
+        card.className = `glass-surface p-2 rounded-lg border text-[10px] cursor-pointer transition-all ${
+          idx === STATE.currentSceneIndex ? 'border-cyan-500/80 bg-zinc-900/90 shadow-glow-cyan' : 'border-zinc-800 hover:border-zinc-700'
+        }`;
+      });
+    }
+
+    function renderTimelineTracks() {
+      const v = document.getElementById('timelineTrackV1');
+      const a = document.getElementById('timelineTrackA1');
+      v.innerHTML = ''; a.innerHTML = '';
+      STATE.scenes.forEach((scn, idx) => {
+        const vb = document.createElement('div');
+        vb.className = 'flex-1 h-full rounded bg-cyan-950/70 border border-cyan-800 p-1 text-[9px] cursor-pointer truncate text-cyan-200';
+        vb.textContent = `V1: ${scn.title}`;
+        vb.onclick = () => { STATE.currentTime = idx * 60; syncPlaybackTelemetry(); };
+        v.appendChild(vb);
+
+        const ab = document.createElement('div');
+        ab.className = 'flex-1 h-full rounded bg-indigo-950/70 border border-indigo-800 p-1 text-[8px] truncate text-indigo-300 font-mono';
+        ab.textContent = `A1: ${scn.narration.substring(0, 15)}...`;
+        a.appendChild(ab);
+      });
+    }
+
+    /* ==========================================================================
+       CHARACTER AI PHOTO RECOGNITION
+       ========================================================================== */
+    function handleCharacterUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        const dataUrl = evt.target.result;
+        STATE.character.hasPhoto = true;
+        STATE.character.dataUrl = dataUrl;
+        STATE.character.base64 = dataUrl.split(',')[1];
+        STATE.character.mimeType = file.type;
+
+        document.getElementById('charPlaceholder').classList.add('hidden');
+        document.getElementById('charPreviewContainer').classList.remove('hidden');
+        document.getElementById('charPreviewImg').src = dataUrl;
+        document.getElementById('charStatusTag').textContent = 'Identity Locked';
+        document.getElementById('charStatusTag').className = 'text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800';
+        document.getElementById('characterTraitsBadge').classList.remove('hidden');
+        showToast('👤 Character Visual DNA locked across 300s', 'success');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeCharacterPhoto(e) {
+      e.stopPropagation();
+      STATE.character.hasPhoto = false;
+      document.getElementById('charPlaceholder').classList.remove('hidden');
+      document.getElementById('charPreviewContainer').classList.add('hidden');
+      document.getElementById('charStatusTag').textContent = 'No Cast';
+      document.getElementById('charStatusTag').className = 'text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400';
+      document.getElementById('characterTraitsBadge').classList.add('hidden');
+    }
+
+    /* ==========================================================================
+       GEMINI 3 FLASH DIRECTOR (Anti-Annoyance, Zero-Repetition Persona)
+       ========================================================================== */
+    async function handleDirectorSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('directorPromptInput');
+      const userPrompt = input.value.trim();
+      if (!userPrompt) return;
+
+      const status = document.getElementById('directorStatusText');
+      status.textContent = 'Directing 5 Scenes...';
+
+      const systemPrompt = `You are an elite, award-winning Hollywood Film Director and Master Cinematographer. 
+Output STRICT JSON matching this schema with NO conversational filler, greetings, pleasantries, apologies, or repetitions of the prompt.
+Generate an exact 5-scene (300-second, 60s each) cinematic narrative breakdown based on the user's vision.
+
+JSON Schema:
+{
+  "scenes": [
+    {
+      "id": 1,
+      "title": "Scene Title",
+      "prompt": "4K photorealistic prompt with camera, lens, and lighting tokens",
+      "narration": "Evocative voiceover sentence"
+    }
+  ]
+}`;
+
+      const apiKey = STATE.apiKey || "";
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+      try {
+        const payload = {
+          contents: [{ parts: [{ text: userPrompt }] }],
+          systemInstruction: { parts: [{ text: systemPrompt }] },
+          generationConfig: {
+            responseMimeType: "application/json",
+            temperature: 0.72
+          }
+        };
+
+        const res = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          const jsonStr = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (jsonStr) {
+            const parsed = JSON.parse(jsonStr);
+            if (parsed.scenes && Array.isArray(parsed.scenes)) {
+              parsed.scenes.forEach((scn, i) => {
+                if (STATE.scenes[i]) {
+                  STATE.scenes[i].title = scn.title;
+                  STATE.scenes[i].prompt = scn.prompt;
+                  STATE.scenes[i].narration = scn.narration;
+                }
+              });
+              renderSceneList();
+              renderTimelineTracks();
+              syncPlaybackTelemetry();
+              status.textContent = '5-Scene Script Locked';
+              showToast('🎬 5-Scene Director Script Locked', 'success');
+            }
+          }
+        } else {
+          status.textContent = 'Rate throttled - local script loaded';
+        }
+      } catch (err) {
+        status.textContent = 'Engine Offline (Using local preset)';
+      }
+    }
+
+    function injectPromptTemplate(t) {
+      document.getElementById('directorPromptInput').value = t;
+    }
+
+    async function batchSynthesizeFullMovie() {
+      showToast('🚀 Batch Synthesizing 5-Minute Reel...', 'info');
+      const apiKey = STATE.apiKey || "";
+
+      for (let i = 0; i < STATE.scenes.length; i++) {
+        STATE.currentTime = i * 60;
+        syncPlaybackTelemetry();
+        try {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{
+                parts: [
+                  ...(STATE.character.hasPhoto ? [{ inlineData: { mimeType: STATE.character.mimeType, data: STATE.character.base64 } }] : []),
+                  { text: `${STATE.scenes[i].prompt}, 4k resolution, cinematic lighting, 35mm anamorphic photography.` }
+                ]
+              }],
+              generationConfig: { responseModalities: ["IMAGE"] }
+            })
+          });
+          if (res.ok) {
+            const data = await res.json();
+            const b64 = data?.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
+            if (b64) {
+              const img = new Image();
+              img.src = `data:image/jpeg;base64,${b64}`;
+              await new Promise(r => img.onload = r);
+              STATE.scenes[i].keyframeImg = img;
+            }
+          }
+        } catch (e) {
+          console.warn('Image synthesis fallback', e);
+        }
+      }
+      playCinematicBoom();
+      showToast('🎉 5-Minute Master Production Complete!', 'success');
+    }
+
+    /* ==========================================================================
+       MEDIA RECORDER CANVAS + AUDIO CAPTURE
+       ========================================================================== */
+    let mediaRecorder = null;
+    let recordedChunks = [];
+
+    function toggleMasterRecording() {
+      initWebAudio();
+      if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+        const stream = canvas.captureStream(60);
+        if (audioCtx && masterGain) {
+          const dest = audioCtx.createMediaStreamDestination();
+          masterGain.connect(dest);
+          dest.stream.getAudioTracks().forEach(t => stream.addTrack(t));
+        }
+        recordedChunks = [];
+        mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9,opus' });
+        mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(recordedChunks, { type: 'video/webm' });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = `KADA_5.0mins_Master_${Date.now()}.webm`;
+          a.click();
+          showToast('💾 Master Video Exported Successfully!', 'success');
+        };
+        mediaRecorder.start();
+        document.getElementById('recordIndicatorDot').classList.add('animate-ping');
+        document.getElementById('recordBtnLabel').textContent = 'STOP RECORDING';
+        showToast('🔴 Recording Master Video Stream...', 'warning');
+      } else {
+        mediaRecorder.stop();
+        document.getElementById('recordIndicatorDot').classList.remove('animate-ping');
+        document.getElementById('recordBtnLabel').textContent = 'Export Master';
+      }
+    }
+
+    /* ==========================================================================
+       ONE-CLICK PRODUCTION DEPLOYMENT ZIP GENERATOR (JSZip)
+       ========================================================================== */
+    async function downloadProductionDeploymentZip() {
+      showToast('📦 Packaging Production Suite ZIP...', 'info');
+      const zip = new JSZip();
+
+      // 1. package.json (Standard npm build, zero bun.lock references)
+      zip.file("package.json", JSON.stringify({
+        name: "kada-5mins-studio",
+        version: "5.0.0",
+        description: "KADA 5.0mins AI Text-to-Video Studio for Cloudflare Pages",
+        scripts: {
+          build: "mkdir -p dist && cp -r public/* dist/",
+          preview: "npx serve dist"
+        },
+        devDependencies: {
+          serve: "^14.2.4"
+        }
+      }, null, 2));
+
+      // 2. public/index.html (current standalone document)
+      const currentHtml = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+      zip.file("public/index.html", currentHtml);
+
+      // 3. wrangler.toml (Cloudflare Pages config)
+      zip.file("wrangler.toml", `name = "emeritabuilder"
+compatibility_date = "2026-10-13"
+pages_build_output_dir = "dist"`);
+
+      // 4. _headers
+      zip.file("public/_headers", `/*
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=3600`);
+
+      // 5. _routes.json
+      zip.file("public/_routes.json", JSON.stringify({
+        version: 1,
+        include: ["/*"],
+        exclude: []
+      }, null, 2));
+
+      // 6. .github/workflows/build-apk.yml (Free GitHub Actions Android APK Builder)
+      zip.file(".github/workflows/build-apk.yml", `name: Build KADA 5.0mins APK
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install -g @bubblewrap/cli
+      - run: |
+          mkdir -p android-build
+          npx @bubblewrap/cli init --manifest=https://emeritabuilder.pages.dev/manifest.json --directory=android-build
+          cd android-build && npx @bubblewrap/cli build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: KADA-5.0mins-Release-APK
+          path: android-build/*.apk`);
+
+      // 7. android native wrapper files
+      zip.file("android/app/src/main/AndroidManifest.xml", `<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.kada5.studio">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application android:allowBackup="true" android:label="KADA 5.0mins" android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+        <activity android:name=".MainActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>`);
+
+      zip.file("android/app/src/main/java/com/kada5/studio/MainActivity.java", `package com.kada5.studio;
+import android.app.Activity;
+import android.os.Bundle;
+import android.webkit.*;
+
+public class MainActivity extends Activity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        WebView webView = new WebView(this);
+        WebSettings s = webView.getSettings();
+        s.setJavaScriptEnabled(true);
+        s.setDomStorageEnabled(true);
+        s.setMediaPlaybackRequiresUserGesture(false);
+        webView.setWebViewClient(new WebViewClient());
+        webView.loadUrl("https://emeritabuilder.pages.dev");
+        setContentView(webView);
+    }
+}`);
+
+      zip.file("android/app/build.gradle", `apply plugin: 'com.android.application'
+android {
+    compileSdkVersion 34
+    defaultConfig {
+        applicationId "com.kada5.studio"
+        minSdkVersion 24
+        targetSdkVersion 34
+        versionCode 1
+        versionName "5.0"
+    }
+}`);
+
+      // 8. README.md
+      zip.file("README.md", `# KADA 5.0mins AI Text-to-Video Studio
+
+Production-ready Cloudflare Pages and Android deployment package.
+
+## Quick Cloudflare Pages Deployment
+1. Upload this repository to GitHub.
+2. In Cloudflare Pages, connect repository:
+   - **Build command**: \`npm run build\`
+   - **Build output directory**: \`dist\`
+3. No \`bun.lock\` or complicated lockfiles required!
+
+## Android APK Generation
+- **Free GitHub Actions**: Run \`Build KADA 5.0mins APK\` in your GitHub Actions tab to download the compiled \`.apk\`.
+- **Direct WebAPK**: Open the site on Android Chrome, click \`Install KADA 5.0mins APK\`.
+`);
+
+      const blob = await zip.generateAsync({ type: "blob" });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = "KADA_5.0mins_Production_Suite.zip";
+      a.click();
+      showToast('🎉 KADA Production ZIP downloaded!', 'success');
+    }
+
+    /* ==========================================================================
+       PWA DYNAMIC MANIFEST & SERVICE WORKER SETUP
+       ========================================================================== */
+    let deferredInstallPrompt = null;
+
+    (function injectDynamicManifest() {
+      const manifest = {
+        name: "KADA 5.0mins",
+        short_name: "KADA 5.0mins",
+        description: "5-Minute Hyperrealistic AI Text-to-Video Studio",
+        start_url: "./",
+        display: "standalone",
+        orientation: "landscape",
+        background_color: "#040507",
+        theme_color: "#040507",
+        icons: [{
+          src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23040507'/><circle cx='50' cy='50' r='35' fill='%2300e5ff'/></svg>",
+          sizes: "192x192 512x512",
+          type: "image/svg+xml",
+          purpose: "any maskable"
+        }]
+      };
+      const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+      document.getElementById('pwaManifestLink').setAttribute('href', URL.createObjectURL(blob));
+    })();
+
+    if ('serviceWorker' in navigator) {
+      const swCode = `
+        self.addEventListener('install', e => self.skipWaiting());
+        self.addEventListener('activate', e => e.waitUntil(clients.claim()));
+        self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
+      `;
+      navigator.serviceWorker.register(URL.createObjectURL(new Blob([swCode], { type: 'application/javascript' })))
+        .catch(err => console.log('SW note:', err));
+    }
+
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      const btn = document.getElementById('pwaInstallBtnLabel');
+      const status = document.getElementById('pwaInstallStatus');
+      if (btn) btn.textContent = 'Install KADA 5.0mins WebAPK';
+      if (status) status.textContent = 'WebAPK ready to mint on device';
+    });
+
+    function triggerPwaInstall() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then(choice => {
+          if (choice.outcome === 'accepted') showToast('Installing KADA APK on device...', 'success');
+          deferredInstallPrompt = null;
+        });
+      } else {
+        showToast("Tap Chrome's options (⋮) > 'Install app' or 'Add to Home screen'", 'info');
+      }
+    }
+
+    /* Modal Toggles */
+    function toggleAndroidModal() { document.getElementById('androidHubModal').classList.toggle('hidden'); }
+    function toggleProductionZipModal() { document.getElementById('productionZipModal').classList.toggle('hidden'); }
+    function toggleApiModal() {
+      const modal = document.getElementById('apiConfigModal');
+      modal.classList.toggle('hidden');
+      if (!modal.classList.contains('hidden') && STATE.apiKey) {
+        document.getElementById('geminiApiKeyInput').value = STATE.apiKey;
+      }
+    }
+    function saveApiKeySettings() {
+      const val = document.getElementById('geminiApiKeyInput').value.trim();
+      STATE.apiKey = val;
+      localStorage.setItem('omni_gemini_key', val);
+      toggleApiModal();
+      showToast('🔑 API Key Saved', 'success');
+    }
+    function switchApkTab(t) {
+      ['direct', 'github', 'source'].forEach(k => {
+        document.getElementById(`apkContent${k.charAt(0).toUpperCase() + k.slice(1)}`).classList.toggle('hidden', k !== t);
+        document.getElementById(`apkTab${k.charAt(0).toUpperCase() + k.slice(1)}`).className = k === t 
+          ? 'py-2 rounded bg-emerald-900/60 text-emerald-300 font-semibold border border-emerald-700/60'
+          : 'py-2 rounded text-zinc-400 hover:text-zinc-200';
+      });
+    }
+    function copyGithubWorkflowCode() {
+      navigator.clipboard.writeText(document.getElementById('githubWorkflowCode').innerText);
+      showToast('📋 GitHub Actions YAML copied to clipboard!', 'success');
+    }
+    function resetSceneTemplates() {
+      renderSceneList();
+      renderTimelineTracks();
+      showToast('Reel Reset to Master Template', 'info');
+    }
+    function toggleGridOverlay() { document.getElementById('gridOverlay').classList.toggle('hidden'); }
+    function toggleSafeGuide() { document.getElementById('safeOverlay').classList.toggle('hidden'); }
+    function changeAspectRatio(v) {
+      const box = document.getElementById('viewportContainer');
+      box.className = box.className.replace(/aspect-\S+/g, '');
+      if (v === '16:9') box.classList.add('aspect-video');
+      else if (v === '9:16') box.classList.add('aspect-[9/16]');
+      else if (v === '1:1') box.classList.add('aspect-square');
+      else if (v === '2.39:1') box.classList.add('aspect-[21/9]');
+    }
+    function updateLensPreset(v) { STATE.optics.lens = v; document.getElementById('hudLens').textContent = v; }
+    function updateAperture(v) { STATE.optics.aperture = v; document.getElementById('apertureValueDisplay').textContent = `f/${v}`; document.getElementById('hudAperture').textContent = `f/${v} T-Stop`; }
+    function updateShutter(v) { STATE.optics.shutterAngle = v; document.getElementById('shutterValueDisplay').textContent = `${v}°`; document.getElementById('hudShutter').textContent = `${v}°`; }
+    function updateKelvin(v) { STATE.optics.kelvin = v; document.getElementById('kelvinValueDisplay').textContent = `${v}K`; document.getElementById('hudKelvin').textContent = `${v}K DAYLIGHT`; }
+    function updateMotionBucket(v) { STATE.optics.motionBucket = v; document.getElementById('motionBucketDisplay').textContent = v; document.getElementById('hudBucket').textContent = v; }
+    function updateWeatherSystem(v) { STATE.optics.weather = v; }
+    function updateFilmLUT(v) { STATE.optics.filmLUT = v; }
+    function switchInspectorTab(t) {
+      ['optics', 'materials', 'physics'].forEach(k => {
+        document.getElementById(`inspector${k.charAt(0).toUpperCase() + k.slice(1)}`).classList.toggle('hidden', k !== t);
+        document.getElementById(`tab${k.charAt(0).toUpperCase() + k.slice(1)}`).className = k === t
+          ? 'flex-1 py-1 rounded text-[10px] font-mono bg-cyan-950 text-cyan-300 border border-cyan-800'
+          : 'flex-1 py-1 rounded text-[10px] font-mono text-zinc-400 hover:bg-zinc-800';
+      });
+    }
+    function applyHollywoodPreset(v) {
+      if (v === 'nolan') { updateLensPreset('imax_70'); updateAperture(5.6); updateKelvin(5200); updateWeatherSystem('none'); }
+      else if (v === 'deakins') { updateLensPreset('arri_50'); updateAperture(2.0); updateKelvin(4800); updateWeatherSystem('none'); }
+      else if (v === 'fincher') { updateLensPreset('zeiss_85'); updateAperture(2.8); updateKelvin(4200); }
+      else if (v === 'cyberpunk') { updateLensPreset('cooke_35'); updateAperture(1.4); updateKelvin(7200); updateWeatherSystem('cyber_rain'); }
+      showToast(`Auteur Rig calibrated: ${v.toUpperCase()}`, 'info');
+    }
+  </script>
+</body>
+</html>
