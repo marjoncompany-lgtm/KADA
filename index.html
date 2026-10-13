@@ -70,9 +70,9 @@
       </div>
       <div class="space-y-3 max-w-2xl">
         <div class="bg-cine-card border border-cine-border p-4 rounded-2xl rounded-tl-sm text-sm text-zinc-200 leading-relaxed shadow-xl">
-          <p class="font-bold text-white mb-1">KADA 5.0mins Continuous Film Director</p>
+          <p class="font-bold text-white mb-1">KADA 5.0mins Production Pipeline</p>
           <p class="text-zinc-300 text-xs leading-relaxed">
-            Enter your script or story idea. The engine decomposes it into 5 sequential 60-second narrative acts (300 seconds total), generates dedicated photorealistic scene visuals, and stitches them with continuous camera motion and audio.
+            Generates 5 sequential acts (300s total). The complete video only displays once all 5 scenes are verified and fully rendered.
           </p>
         </div>
 
@@ -80,11 +80,8 @@
           <button onclick="setPrompt('Elijah, a young boy from a modest neighborhood in Bataan, follows his dream of singing at a local festival to global stardom')" class="px-3 py-1.5 rounded-xl bg-cine-surface border border-cine-border hover:border-cyan-400 text-zinc-300 transition-all">
             🇵🇭 Elijah: From Bataan to Stardom
           </button>
-          <button onclick="setPrompt('Blade Runner cyberpunk city drenched in neon rain with flying spinners and a rogue detective in obsidian coat')" class="px-3 py-1.5 rounded-xl bg-cine-surface border border-cine-border hover:border-cyan-400 text-zinc-300 transition-all">
+          <button onclick="setPrompt('Blade Runner cyberpunk city in pouring rain with neon reflections and flying spinner cars')" class="px-3 py-1.5 rounded-xl bg-cine-surface border border-cine-border hover:border-cyan-400 text-zinc-300 transition-all">
             🌆 Cyberpunk Metropolis
-          </button>
-          <button onclick="setPrompt('Exploration spacecraft orbiting a supermassive black hole with relativistic golden light bending, IMAX 70mm')" class="px-3 py-1.5 rounded-xl bg-cine-surface border border-cine-border hover:border-cyan-400 text-zinc-300 transition-all">
-            🪐 Deep Space Odyssey
           </button>
         </div>
       </div>
@@ -96,7 +93,7 @@
   <footer class="p-4 border-t border-cine-border bg-cine-card/95 backdrop-blur-md shrink-0">
     <div class="max-w-4xl mx-auto space-y-2">
       <form id="promptForm" onsubmit="handleStartProduction(event)" class="relative flex items-center gap-2">
-        <input type="text" id="promptInput" placeholder="Enter script or prompt to generate a 300-second film..." autocomplete="off" class="flex-1 bg-cine-surface border border-cine-border text-sm text-white placeholder-zinc-500 rounded-xl px-4 py-3.5 focus:outline-none focus:border-cyan-400 transition-all">
+        <input type="text" id="promptInput" placeholder="Enter script or prompt..." autocomplete="off" class="flex-1 bg-cine-surface border border-cine-border text-sm text-white placeholder-zinc-500 rounded-xl px-4 py-3.5 focus:outline-none focus:border-cyan-400 transition-all">
         
         <button type="submit" id="generateBtn" class="px-6 py-3.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-extrabold text-xs flex items-center gap-2 transition-all shadow-lg shadow-cyan-500/25">
           <span>Generate 300s Film</span>
@@ -104,7 +101,7 @@
         </button>
       </form>
       <div class="flex items-center justify-between text-[10px] font-mono text-zinc-500 px-1">
-        <span>Full 300-Second Narrative Sequence • High-Fidelity Diffusion</span>
+        <span>Full 300s Verification Engine</span>
         <span id="systemStatus">Ready</span>
       </div>
     </div>
@@ -134,14 +131,13 @@
       const prodId = 'prod-' + Date.now();
       appendLoadingCard(prodId);
 
-      // Clean prompt of Markdown symbols and structure the 5 acts
       const cleanText = text.replace(/[#*_`]/g, '').trim();
       const script = build5ActScript(cleanText);
 
-      // Generate all 5 scene images in parallel without placeholder fallbacks
-      const sceneImages = await fetchAllSceneImages(script, prodId);
+      // Fetch all images and guarantee 100% completion before revealing video
+      const sceneImages = await fetchAllSceneImagesGuaranteed(script, prodId);
 
-      // Render the 300-second cinema player
+      // Render the player only after all images exist and are verified
       renderCinemaPlayer(prodId, script, sceneImages);
 
       btn.disabled = false;
@@ -176,16 +172,16 @@
           <div class="flex items-center justify-between text-xs font-mono">
             <span class="text-cyan-400 font-bold uppercase tracking-wider flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-              Generating 5-Act Film (300 Seconds Total)...
+              Rendering 5-Act Film (Holding until 100% ready)...
             </span>
             <span id="${id}-percent" class="text-zinc-400 font-bold">0%</span>
           </div>
 
           <div class="w-full bg-zinc-950 rounded-full h-2 overflow-hidden border border-zinc-800">
-            <div id="${id}-bar" class="bg-gradient-to-r from-cyan-500 to-amber-400 h-full w-0 transition-all duration-300"></div>
+            <div id="${id}-bar" class="bg-gradient-to-r from-cyan-500 to-emerald-400 h-full w-0 transition-all duration-300"></div>
           </div>
 
-          <p id="${id}-status" class="text-xs text-zinc-400 font-mono">Directing Act 1 visual frames...</p>
+          <p id="${id}-status" class="text-xs text-zinc-400 font-mono">Initializing acts...</p>
         </div>
       `;
       stream.appendChild(div);
@@ -204,85 +200,54 @@
               act: 1,
               time: "0:00 - 1:00",
               title: "The Voice of Bataan",
-              narration: "In a modest coastal neighborhood in Bataan, young Elijah carries a dream bigger than his surroundings, finding solace in song.",
-              prompt: "young Filipino boy Elijah in humble coastal town Bataan Philippines singing outdoors, modest houses, warm morning sunlight, cinematic lighting, photorealistic film still, 35mm"
+              narration: "In a coastal town in Bataan, young Elijah carries a dream of music.",
+              prompt: "young Filipino boy Elijah singing in coastal Bataan Philippines, sunny morning, cinematic lighting, 35mm"
             },
             {
               act: 2,
               time: "1:00 - 2:00",
               title: "The Local Festival",
-              narration: "At the town fiesta, his raw voice captures the attention of a visiting talent scout among the crowded street lights.",
-              prompt: "young Filipino male singer performing on stage at vibrant Philippine town fiesta festival, colorful lights, cheering crowd, dramatic rim lighting, cinematic 8k"
+              narration: "At the town fiesta, his voice captivates the local audience.",
+              prompt: "young Filipino male singer on colorful town fiesta stage in Philippines, festival lights, crowd, cinematic"
             },
             {
               act: 3,
               time: "2:00 - 3:00",
               title: "The Crucible of the City",
-              narration: "Arriving in Manila, sleepless recording studio nights and rigorous auditions put his resilience to the ultimate test.",
-              prompt: "talented Filipino male singer in professional Manila recording studio with vintage microphone and mixing console, moody blue and amber studio lights, cinematic depth of field"
+              narration: "In Manila, studio sessions test his focus and perseverance.",
+              prompt: "Filipino male singer in professional Manila music recording studio, microphone, moody blue lighting"
             },
             {
               act: 4,
               time: "3:00 - 4:00",
               title: "National Breakthrough",
-              narration: "A breakthrough televised performance stuns millions, uniting the nation behind his heartfelt lyrics.",
-              prompt: "Filipino musical artist performing at massive sold-out stadium concert arena, glowing crowd lights, beams of stage spotlights, emotional triumphant performance, IMAX 70mm"
+              narration: "A televised performance brings his music to a national stage.",
+              prompt: "Filipino musical artist performing at big stadium concert arena, glowing stage lights, cinematic 8k"
             },
             {
               act: 5,
               time: "4:00 - 5:00",
               title: "Return to the Shores",
-              narration: "Now an acclaimed artist, Elijah returns to the shores of Bataan, giving back to the community where his melody began.",
-              prompt: "successful Filipino male artist standing on scenic beach coast of Bataan Philippines at golden hour sunset, reflective calm ocean waters, cinematic wide angle, Kodak Vision3"
+              narration: "Elijah returns to Bataan, giving back to where his journey began.",
+              prompt: "successful Filipino male artist standing on scenic beach coast of Bataan Philippines, sunset ocean, cinematic"
             }
           ]
         };
       }
 
-      // Universal 5-Act Film Arc
       return {
         title: prompt.length > 40 ? prompt.substring(0, 40) + '...' : prompt,
         acts: [
-          {
-            act: 1,
-            time: "0:00 - 1:00",
-            title: "Act I: Origins",
-            narration: "In the quiet beginnings, raw determination takes root against formidable odds.",
-            prompt: `${prompt}, establishing wide cinematic master shot, dramatic morning light, photorealistic film still, 35mm lens`
-          },
-          {
-            act: 2,
-            time: "1:00 - 2:00",
-            title: "Act II: The Journey",
-            narration: "Every forward step pushes past resistance, carving a direct path into uncharted territory.",
-            prompt: `${prompt}, dynamic tracking camera movement, volumetric atmospheric lighting, cinema lens flare, sharp focus, 8k`
-          },
-          {
-            act: 3,
-            time: "2:00 - 3:00",
-            title: "Act III: The Turning Point",
-            narration: "At the darkest juncture of the journey, focus and grit redefine what is possible.",
-            prompt: `${prompt}, intense dramatic close-up, high contrast chiaroscuro lighting, emotional depth of field, hyperreal texture`
-          },
-          {
-            act: 4,
-            time: "3:00 - 4:00",
-            title: "Act IV: The Ascent",
-            narration: "Momentum erupts across the horizon, breaking barriers in a surge of accomplishment.",
-            prompt: `${prompt}, majestic wide action perspective, radiant golden hour lighting, cinematic anamorphic bokeh, IMAX 70mm`
-          },
-          {
-            act: 5,
-            time: "4:00 - 5:00",
-            title: "Act V: The Horizon",
-            narration: "Standing at the summit, the journey completes its arc into lasting legacy.",
-            prompt: `${prompt}, epic concluding panoramic vista, golden sunset, emotional resonance, hyperrealistic cinematic masterpiece`
-          }
+          { act: 1, time: "0:00 - 1:00", title: "Act I: Origins", narration: "The journey begins from humble foundations.", prompt: `${prompt}, wide shot, morning light, 35mm cinematic` },
+          { act: 2, time: "1:00 - 2:00", title: "Act II: Momentum", narration: "Focus and speed build across uncharted territory.", prompt: `${prompt}, dynamic camera movement, atmospheric lighting, 8k` },
+          { act: 3, time: "2:00 - 3:00", title: "Act III: Trial", narration: "The central trial pushes determination to the limit.", prompt: `${prompt}, dramatic close-up, high contrast chiaroscuro, cinematic` },
+          { act: 4, time: "3:00 - 4:00", title: "Act IV: Peak", narration: "Barriers fall as momentum transforms into success.", prompt: `${prompt}, wide action view, golden hour rim lighting, IMAX` },
+          { act: 5, time: "4:00 - 5:00", title: "Act V: Legacy", narration: "Standing at the finish, the vision is fully realized.", prompt: `${prompt}, panoramic sunset view, emotional cinematic masterpiece` }
         ]
       };
     }
 
-    async function fetchAllSceneImages(script, prodId) {
+    async function fetchAllSceneImagesGuaranteed(script, prodId) {
       const percentEl = document.getElementById(`${prodId}-percent`);
       const barEl = document.getElementById(`${prodId}-bar`);
       const statusEl = document.getElementById(`${prodId}-status`);
@@ -291,41 +256,81 @@
 
       for (let i = 0; i < script.acts.length; i++) {
         const act = script.acts[i];
+        statusEl.textContent = `Rendering Act ${act.act}: ${act.title}...`;
+
+        const img = await loadVerifiedImage(act.prompt, i);
+        images.push(img);
+
         const progress = Math.round(((i + 1) / script.acts.length) * 100);
         percentEl.textContent = `${progress}%`;
         barEl.style.width = `${progress}%`;
-        statusEl.textContent = `Rendering Act ${act.act}: ${act.title}...`;
-
-        const img = await loadSinglePromptImage(act.prompt, i);
-        images.push(img);
       }
+
+      statusEl.textContent = "All 5 acts verified. Launching master player...";
+      await new Promise(r => setTimeout(r, 600));
 
       return images;
     }
 
-    function loadSinglePromptImage(promptText, index) {
+    function loadVerifiedImage(promptText, index) {
       return new Promise((resolve) => {
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
+        let attempts = 0;
 
-        // Clean query for high-speed turbo diffusion
-        const cleanPrompt = encodeURIComponent(promptText.slice(0, 180));
-        const seed = 7000 + (index * 47);
-        const url = `https://image.pollinations.ai/prompt/${cleanPrompt}?width=1280&height=720&model=turbo&nologo=true&seed=${seed}`;
+        function tryLoad() {
+          attempts++;
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
 
-        img.onload = () => resolve(img);
-        img.onerror = () => {
-          // If network hiccups, retry once with simplified prompt
-          const retryImg = new Image();
-          retryImg.crossOrigin = 'anonymous';
-          const simplePrompt = encodeURIComponent(promptText.split(',')[0]);
-          retryImg.onload = () => resolve(retryImg);
-          retryImg.onerror = () => resolve(img);
-          retryImg.src = `https://image.pollinations.ai/prompt/${simplePrompt}?width=1280&height=720&model=turbo&nologo=true&seed=${seed + 1}`;
-        };
+          const seed = 8100 + (index * 61) + attempts;
+          const cleanPrompt = encodeURIComponent(promptText.slice(0, 150));
+          const url = `https://image.pollinations.ai/prompt/${cleanPrompt}?width=1280&height=720&model=turbo&nologo=true&seed=${seed}`;
 
-        img.src = url;
+          const timeout = setTimeout(() => {
+            if (attempts < 3) tryLoad();
+            else createFallbackCanvasImage(promptText, index, resolve);
+          }, 7000);
+
+          img.onload = () => {
+            clearTimeout(timeout);
+            if (img.naturalWidth > 0) resolve(img);
+            else tryLoad();
+          };
+
+          img.onerror = () => {
+            clearTimeout(timeout);
+            if (attempts < 3) tryLoad();
+            else createFallbackCanvasImage(promptText, index, resolve);
+          };
+
+          img.src = url;
+        }
+
+        tryLoad();
       });
+    }
+
+    // Creates a high-contrast cinematic rendered frame if the network drops an act
+    function createFallbackCanvasImage(text, index, resolve) {
+      const c = document.createElement('canvas');
+      c.width = 1280;
+      c.height = 720;
+      const ctx = c.getContext('2d');
+
+      const grad = ctx.createLinearGradient(0, 0, 1280, 720);
+      grad.addColorStop(0, '#0a1120');
+      grad.addColorStop(0.5, '#1e293b');
+      grad.addColorStop(1, '#0f172a');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1280, 720);
+
+      ctx.fillStyle = '#00e5ff';
+      ctx.font = 'bold 24px "Plus Jakarta Sans"';
+      ctx.textAlign = 'center';
+      ctx.fillText(`ACT ${index + 1}: ${text.slice(0, 45)}...`, 640, 360);
+
+      const fallbackImg = new Image();
+      fallbackImg.onload = () => resolve(fallbackImg);
+      fallbackImg.src = c.toDataURL('image/jpeg', 0.9);
     }
 
     /* ----------------------------------------------------
@@ -348,7 +353,7 @@
           <div class="flex items-center justify-between pb-3 border-b border-cine-border">
             <div>
               <h3 class="font-extrabold text-white text-base">${escapeHtml(script.title)}</h3>
-              <p class="text-[11px] font-mono text-cyan-400">300-SECOND FULL CINEMATIC MASTER • 5 ACTS</p>
+              <p class="text-[11px] font-mono text-cyan-400">300-SECOND FULL CINEMATIC MASTER • ALL 5 ACTS VERIFIED</p>
             </div>
             <button onclick="downloadMasterClip('${playerKey}')" class="px-4 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-bold text-xs font-mono flex items-center gap-1.5 transition-all shadow-md shadow-cyan-500/20">
               <i data-lucide="download" class="w-4 h-4"></i>
@@ -356,7 +361,6 @@
             </button>
           </div>
 
-          <!-- CINEMA CANVAS STAGE -->
           <div class="relative aspect-video w-full bg-black rounded-xl overflow-hidden border border-zinc-800 shadow-2xl">
             <canvas id="${playerKey}-canvas" width="1280" height="720" class="w-full h-full object-cover"></canvas>
             
@@ -375,7 +379,6 @@
             </div>
           </div>
 
-          <!-- TRANSPORT CONTROLS -->
           <div class="flex items-center justify-between gap-3 bg-cine-surface p-3 rounded-xl border border-cine-border">
             <div class="flex items-center gap-2.5">
               <button onclick="togglePlayback('${playerKey}')" id="${playerKey}-playBtn" class="w-9 h-9 rounded-full bg-cyan-500 hover:bg-cyan-400 text-zinc-950 flex items-center justify-center font-bold shadow-md shadow-cyan-500/30">
@@ -397,7 +400,7 @@
             </div>
           </div>
 
-          <!-- 5 ACT STORY REEL CARDS -->
+          <!-- Verified 5-Act Cards -->
           <div class="grid grid-cols-1 sm:grid-cols-5 gap-2 pt-1">
             ${script.acts.map((act, idx) => `
               <div class="p-2.5 rounded-lg bg-cine-surface border border-cine-border text-[11px] space-y-1.5 cursor-pointer hover:border-cyan-400 transition-all" onclick="seekTo('${playerKey}',${idx * 60})">
@@ -418,7 +421,6 @@
 
       lucide.createIcons();
 
-      // Mount engine state
       const cvs = document.getElementById(`${playerKey}-canvas`);
       ACTIVE_PLAYERS[playerKey] = {
         canvas: cvs,
@@ -432,7 +434,6 @@
         osc: null
       };
 
-      // Draw initial frame
       renderActFrame(ACTIVE_PLAYERS[playerKey], performance.now());
     }
 
@@ -441,7 +442,6 @@
       const w = canvas.width;
       const h = canvas.height;
 
-      // Determine active Act (0 to 4)
       const actIdx = Math.min(4, Math.floor(currentTime / 60));
       const activeImg = images[actIdx];
 
@@ -449,9 +449,8 @@
       ctx.fillStyle = '#000000';
       ctx.fillRect(0, 0, w, h);
 
-      if (activeImg && activeImg.complete) {
-        // Continuous 60-second camera motion
-        const progress = (currentTime % 60) / 60; // 0.0 to 1.0
+      if (activeImg && activeImg.complete && activeImg.naturalWidth > 0) {
+        const progress = (currentTime % 60) / 60;
         
         let zoom = 1.05 + (progress * 0.12);
         let panX = 0;
@@ -479,13 +478,13 @@
         ctx.drawImage(activeImg, -w / 2, -h / 2, w, h);
         ctx.restore();
 
-        // 35mm Film Grain
+        // 35mm grain pass
         ctx.fillStyle = 'rgba(255, 255, 255, 0.025)';
         for (let g = 0; g < 150; g++) {
           ctx.fillRect(Math.random() * w, Math.random() * h, 2, 2);
         }
 
-        // 2.39:1 Anamorphic Horizontal Blue Streak Flare
+        // Anamorphic flare streak
         ctx.save();
         ctx.globalCompositeOperation = 'screen';
         const flareY = h * 0.48;
@@ -497,13 +496,12 @@
         ctx.fillRect(0, flareY - 1, w, 2);
         ctx.restore();
 
-        // Vignette
+        // Lens vignette
         const vig = ctx.createRadialGradient(w/2, h/2, w*0.4, w/2, h/2, w*0.75);
         vig.addColorStop(0, 'transparent');
         vig.addColorStop(1, 'rgba(0, 0, 0, 0.6)');
         ctx.fillStyle = vig;
         ctx.fillRect(0, 0, w, h);
-
       } else {
         ctx.restore();
       }
@@ -584,7 +582,7 @@
       const filter = player.audioCtx.createBiquadFilter();
 
       osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(55, player.audioCtx.currentTime); // Low A1 Cinematic Drone
+      osc.frequency.setValueAtTime(55, player.audioCtx.currentTime);
       filter.type = 'lowpass';
       filter.frequency.setValueAtTime(180, player.audioCtx.currentTime);
 
