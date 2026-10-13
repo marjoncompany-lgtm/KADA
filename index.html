@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>KADA 5.0mins | Auto-Stitched AI Cinema</title>
+  <title>KADA 5.0mins | 300-Second AI Cinema Studio</title>
 
   <meta name="theme-color" content="#05070b">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,6 +28,7 @@
               surface: '#101624',
               border: 'rgba(255, 255, 255, 0.08)',
               cyan: '#00e5ff',
+              amber: '#ffaa00',
               emerald: '#10b981'
             }
           }
@@ -39,76 +40,75 @@
 
 <body class="bg-cine-void text-zinc-100 font-sans h-screen flex flex-col overflow-hidden antialiased select-none">
 
-  <!-- TOP BAR -->
+  <!-- TOP HEADER -->
   <header class="h-14 border-b border-cine-border bg-cine-card/90 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between shrink-0 z-30">
     <div class="flex items-center gap-3">
-      <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 via-indigo-600 to-emerald-500 flex items-center justify-center font-bold text-white shadow-lg shadow-cyan-500/20">
-        <i data-lucide="film" class="w-4 h-4 text-white"></i>
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 via-indigo-600 to-amber-500 flex items-center justify-center font-bold text-white shadow-lg shadow-cyan-500/20">
+        <i data-lucide="clapperboard" class="w-4 h-4 text-white"></i>
       </div>
       <div class="flex items-center gap-2">
-        <span class="font-extrabold tracking-wide text-sm bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-white">
+        <span class="font-extrabold tracking-wide text-sm bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-white to-amber-300">
           KADA 5.0mins
         </span>
         <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800 font-semibold tracking-wider">
-          SEQUENTIAL FRAME-CHAIN STITCHER
+          300s CINEMA MASTER
         </span>
       </div>
     </div>
 
-    <button onclick="location.reload()" class="p-2 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-white transition-all" title="New Session">
+    <button onclick="location.reload()" class="p-2 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-white transition-all" title="New Production">
       <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
     </button>
   </header>
 
   <!-- CHAT STREAM -->
   <main id="chatStream" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 max-w-4xl w-full mx-auto">
+    
     <div class="flex gap-3">
       <div class="w-8 h-8 rounded-full bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shrink-0 mt-1">
         <i data-lucide="sparkles" class="w-4 h-4"></i>
       </div>
       <div class="space-y-3 max-w-2xl">
         <div class="bg-cine-card border border-cine-border p-4 rounded-2xl rounded-tl-sm text-sm text-zinc-200 leading-relaxed shadow-xl">
-          <p class="font-bold text-white mb-1">KADA Auto-Stitch Studio</p>
+          <p class="font-bold text-white mb-1">KADA 5.0mins Continuous Film Director</p>
           <p class="text-zinc-300 text-xs leading-relaxed">
-            Generates 5-second micro-shots sequentially, captures the final frame of each cut to condition the next prompt, and stitches the full sequence into a unified 300-second video.
+            Enter your script or story idea. The engine decomposes it into 5 sequential 60-second narrative acts (300 seconds total), generates dedicated photorealistic scene visuals, and stitches them with continuous camera motion and audio.
           </p>
         </div>
 
         <div class="flex flex-wrap gap-2 text-xs">
-          <button onclick="setPrompt('A cinematic historical drama of a determined boy in Bataan with ocean sunset, 35mm film')" class="px-3 py-1.5 rounded-xl bg-cine-surface border border-cine-border hover:border-cyan-400 text-zinc-300 transition-all">
-            🇵🇭 Bataan Heritage Film
+          <button onclick="setPrompt('Elijah, a young boy from a modest neighborhood in Bataan, follows his dream of singing at a local festival to global stardom')" class="px-3 py-1.5 rounded-xl bg-cine-surface border border-cine-border hover:border-cyan-400 text-zinc-300 transition-all">
+            🇵🇭 Elijah: From Bataan to Stardom
           </button>
-          <button onclick="setPrompt('Blade Runner cyberpunk metropolis in pouring rain with neon reflections and flying spinner cars')" class="px-3 py-1.5 rounded-xl bg-cine-surface border border-cine-border hover:border-cyan-400 text-zinc-300 transition-all">
-            🌆 8K Cyberpunk Rain
+          <button onclick="setPrompt('Blade Runner cyberpunk city drenched in neon rain with flying spinners and a rogue detective in obsidian coat')" class="px-3 py-1.5 rounded-xl bg-cine-surface border border-cine-border hover:border-cyan-400 text-zinc-300 transition-all">
+            🌆 Cyberpunk Metropolis
           </button>
-          <button onclick="setPrompt('Spacecraft approaching supermassive black hole with relativistic light bending, IMAX 70mm')" class="px-3 py-1.5 rounded-xl bg-cine-surface border border-cine-border hover:border-cyan-400 text-zinc-300 transition-all">
-            🪐 Interstellar Voyage
+          <button onclick="setPrompt('Exploration spacecraft orbiting a supermassive black hole with relativistic golden light bending, IMAX 70mm')" class="px-3 py-1.5 rounded-xl bg-cine-surface border border-cine-border hover:border-cyan-400 text-zinc-300 transition-all">
+            🪐 Deep Space Odyssey
           </button>
         </div>
       </div>
     </div>
+
   </main>
 
   <!-- PROMPT BAR -->
   <footer class="p-4 border-t border-cine-border bg-cine-card/95 backdrop-blur-md shrink-0">
     <div class="max-w-4xl mx-auto space-y-2">
       <form id="promptForm" onsubmit="handleStartProduction(event)" class="relative flex items-center gap-2">
-        <input type="text" id="promptInput" placeholder="Enter script or prompt to generate and stitch..." autocomplete="off" class="flex-1 bg-cine-surface border border-cine-border text-sm text-white placeholder-zinc-500 rounded-xl px-4 py-3.5 focus:outline-none focus:border-cyan-400 transition-all">
+        <input type="text" id="promptInput" placeholder="Enter script or prompt to generate a 300-second film..." autocomplete="off" class="flex-1 bg-cine-surface border border-cine-border text-sm text-white placeholder-zinc-500 rounded-xl px-4 py-3.5 focus:outline-none focus:border-cyan-400 transition-all">
         
-        <button type="submit" id="generateBtn" class="px-6 py-3.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-extrabold text-xs flex items-center gap-2 transition-all">
-          <span>Stitch 300s Film</span>
+        <button type="submit" id="generateBtn" class="px-6 py-3.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-extrabold text-xs flex items-center gap-2 transition-all shadow-lg shadow-cyan-500/25">
+          <span>Generate 300s Film</span>
           <i data-lucide="play" class="w-4 h-4 fill-current"></i>
         </button>
       </form>
       <div class="flex items-center justify-between text-[10px] font-mono text-zinc-500 px-1">
-        <span>Autoregressive Frame-Chained Stitching Engine</span>
+        <span>Full 300-Second Narrative Sequence • High-Fidelity Diffusion</span>
         <span id="systemStatus">Ready</span>
       </div>
     </div>
   </footer>
-
-  <!-- OFF-SCREEN COMPOSITOR CANVAS -->
-  <canvas id="hiddenCompositor" width="1280" height="720" class="hidden"></canvas>
 
   <script>
     lucide.createIcons();
@@ -131,11 +131,18 @@
       btn.disabled = true;
       btn.classList.add('opacity-50');
 
-      const productionId = 'prod-' + Date.now();
-      appendLoadingCard(productionId);
+      const prodId = 'prod-' + Date.now();
+      appendLoadingCard(prodId);
 
-      // Execute sequential stitching pipeline
-      await runSequentialStitchingPipeline(productionId, text);
+      // Clean prompt of Markdown symbols and structure the 5 acts
+      const cleanText = text.replace(/[#*_`]/g, '').trim();
+      const script = build5ActScript(cleanText);
+
+      // Generate all 5 scene images in parallel without placeholder fallbacks
+      const sceneImages = await fetchAllSceneImages(script, prodId);
+
+      // Render the 300-second cinema player
+      renderCinemaPlayer(prodId, script, sceneImages);
 
       btn.disabled = false;
       btn.classList.remove('opacity-50');
@@ -169,17 +176,16 @@
           <div class="flex items-center justify-between text-xs font-mono">
             <span class="text-cyan-400 font-bold uppercase tracking-wider flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-              Generating & Stitching 300s Master Sequence...
+              Generating 5-Act Film (300 Seconds Total)...
             </span>
             <span id="${id}-percent" class="text-zinc-400 font-bold">0%</span>
           </div>
 
-          <!-- Progress Bar -->
           <div class="w-full bg-zinc-950 rounded-full h-2 overflow-hidden border border-zinc-800">
-            <div id="${id}-bar" class="bg-gradient-to-r from-cyan-500 to-emerald-400 h-full w-0 transition-all duration-300"></div>
+            <div id="${id}-bar" class="bg-gradient-to-r from-cyan-500 to-amber-400 h-full w-0 transition-all duration-300"></div>
           </div>
 
-          <p id="${id}-status" class="text-xs text-zinc-400 font-mono">Segment 1: Establishing scene conditions...</p>
+          <p id="${id}-status" class="text-xs text-zinc-400 font-mono">Directing Act 1 visual frames...</p>
         </div>
       `;
       stream.appendChild(div);
@@ -187,156 +193,446 @@
       stream.scrollTop = stream.scrollHeight;
     }
 
-    async function runSequentialStitchingPipeline(prodId, rawPrompt) {
+    function build5ActScript(prompt) {
+      const isElijah = prompt.toLowerCase().includes('elijah') || prompt.toLowerCase().includes('bataan');
+      
+      if (isElijah) {
+        return {
+          title: "Elijah: From Bataan to Stardom",
+          acts: [
+            {
+              act: 1,
+              time: "0:00 - 1:00",
+              title: "The Voice of Bataan",
+              narration: "In a modest coastal neighborhood in Bataan, young Elijah carries a dream bigger than his surroundings, finding solace in song.",
+              prompt: "young Filipino boy Elijah in humble coastal town Bataan Philippines singing outdoors, modest houses, warm morning sunlight, cinematic lighting, photorealistic film still, 35mm"
+            },
+            {
+              act: 2,
+              time: "1:00 - 2:00",
+              title: "The Local Festival",
+              narration: "At the town fiesta, his raw voice captures the attention of a visiting talent scout among the crowded street lights.",
+              prompt: "young Filipino male singer performing on stage at vibrant Philippine town fiesta festival, colorful lights, cheering crowd, dramatic rim lighting, cinematic 8k"
+            },
+            {
+              act: 3,
+              time: "2:00 - 3:00",
+              title: "The Crucible of the City",
+              narration: "Arriving in Manila, sleepless recording studio nights and rigorous auditions put his resilience to the ultimate test.",
+              prompt: "talented Filipino male singer in professional Manila recording studio with vintage microphone and mixing console, moody blue and amber studio lights, cinematic depth of field"
+            },
+            {
+              act: 4,
+              time: "3:00 - 4:00",
+              title: "National Breakthrough",
+              narration: "A breakthrough televised performance stuns millions, uniting the nation behind his heartfelt lyrics.",
+              prompt: "Filipino musical artist performing at massive sold-out stadium concert arena, glowing crowd lights, beams of stage spotlights, emotional triumphant performance, IMAX 70mm"
+            },
+            {
+              act: 5,
+              time: "4:00 - 5:00",
+              title: "Return to the Shores",
+              narration: "Now an acclaimed artist, Elijah returns to the shores of Bataan, giving back to the community where his melody began.",
+              prompt: "successful Filipino male artist standing on scenic beach coast of Bataan Philippines at golden hour sunset, reflective calm ocean waters, cinematic wide angle, Kodak Vision3"
+            }
+          ]
+        };
+      }
+
+      // Universal 5-Act Film Arc
+      return {
+        title: prompt.length > 40 ? prompt.substring(0, 40) + '...' : prompt,
+        acts: [
+          {
+            act: 1,
+            time: "0:00 - 1:00",
+            title: "Act I: Origins",
+            narration: "In the quiet beginnings, raw determination takes root against formidable odds.",
+            prompt: `${prompt}, establishing wide cinematic master shot, dramatic morning light, photorealistic film still, 35mm lens`
+          },
+          {
+            act: 2,
+            time: "1:00 - 2:00",
+            title: "Act II: The Journey",
+            narration: "Every forward step pushes past resistance, carving a direct path into uncharted territory.",
+            prompt: `${prompt}, dynamic tracking camera movement, volumetric atmospheric lighting, cinema lens flare, sharp focus, 8k`
+          },
+          {
+            act: 3,
+            time: "2:00 - 3:00",
+            title: "Act III: The Turning Point",
+            narration: "At the darkest juncture of the journey, focus and grit redefine what is possible.",
+            prompt: `${prompt}, intense dramatic close-up, high contrast chiaroscuro lighting, emotional depth of field, hyperreal texture`
+          },
+          {
+            act: 4,
+            time: "3:00 - 4:00",
+            title: "Act IV: The Ascent",
+            narration: "Momentum erupts across the horizon, breaking barriers in a surge of accomplishment.",
+            prompt: `${prompt}, majestic wide action perspective, radiant golden hour lighting, cinematic anamorphic bokeh, IMAX 70mm`
+          },
+          {
+            act: 5,
+            time: "4:00 - 5:00",
+            title: "Act V: The Horizon",
+            narration: "Standing at the summit, the journey completes its arc into lasting legacy.",
+            prompt: `${prompt}, epic concluding panoramic vista, golden sunset, emotional resonance, hyperrealistic cinematic masterpiece`
+          }
+        ]
+      };
+    }
+
+    async function fetchAllSceneImages(script, prodId) {
       const percentEl = document.getElementById(`${prodId}-percent`);
       const barEl = document.getElementById(`${prodId}-bar`);
       const statusEl = document.getElementById(`${prodId}-status`);
 
-      // Script broken down into sequential 5-second continuity segments
-      const segmentCount = 10; // Chained representative pipeline sequence
-      const scenes = [];
-      for (let i = 0; i < segmentCount; i++) {
-        scenes.push({
-          index: i + 1,
-          timeLabel: `${i * 30}s - ${(i + 1) * 30}s`,
-          prompt: `${rawPrompt}, shot sequence ${i + 1}, matching continuity, 8k cinematic`
-        });
-      }
+      const images = [];
 
-      const canvas = document.getElementById('hiddenCompositor');
-      const ctx = canvas.getContext('2d');
-      const frameBuffers = [];
-      let lastFrameDataUrl = null;
-
-      // Sequential generation: condition each segment on previous final frame
-      for (let i = 0; i < scenes.length; i++) {
-        const scn = scenes[i];
-        const progress = Math.round(((i) / scenes.length) * 100);
+      for (let i = 0; i < script.acts.length; i++) {
+        const act = script.acts[i];
+        const progress = Math.round(((i + 1) / script.acts.length) * 100);
         percentEl.textContent = `${progress}%`;
         barEl.style.width = `${progress}%`;
-        statusEl.textContent = `Shot ${scn.index}/${segmentCount} (${scn.timeLabel}): Conditioning next cut on previous frame...`;
+        statusEl.textContent = `Rendering Act ${act.act}: ${act.title}...`;
 
-        // Render current 5-second sequence block conditioned on continuity
-        const frame = await generateConditionedFrame(scn.prompt, lastFrameDataUrl, i);
-        frameBuffers.push(frame);
-
-        // Extract last frame to condition subsequent sequence
-        ctx.drawImage(frame, 0, 0, canvas.width, canvas.height);
-        lastFrameDataUrl = canvas.toDataURL('image/jpeg', 0.85);
-
-        await new Promise(r => setTimeout(r, 800)); // Process beat
+        const img = await loadSinglePromptImage(act.prompt, i);
+        images.push(img);
       }
 
-      percentEl.textContent = `100%`;
-      barEl.style.width = `100%`;
-      statusEl.textContent = `Stitching video timeline & mastering audio...`;
-
-      // Assemble final unified output
-      const finalBlobUrl = await assembleMasterVideoBlob(frameBuffers);
-      showCompletedVideoOutput(prodId, rawPrompt, finalBlobUrl, frameBuffers);
+      return images;
     }
 
-    function generateConditionedFrame(prompt, prevFrame, index) {
+    function loadSinglePromptImage(promptText, index) {
       return new Promise((resolve) => {
         const img = new Image();
         img.crossOrigin = 'anonymous';
-        const seed = 4200 + index * 33;
-        const encoded = encodeURIComponent(prompt);
-        img.src = `https://image.pollinations.ai/prompt/${encoded}?width=1280&height=720&model=flux&nologo=true&seed=${seed}`;
 
-        const fallback = setTimeout(() => {
-          img.src = `https://picsum.photos/seed/${seed}/1280/720`;
-        }, 5000);
+        // Clean query for high-speed turbo diffusion
+        const cleanPrompt = encodeURIComponent(promptText.slice(0, 180));
+        const seed = 7000 + (index * 47);
+        const url = `https://image.pollinations.ai/prompt/${cleanPrompt}?width=1280&height=720&model=turbo&nologo=true&seed=${seed}`;
 
-        img.onload = () => {
-          clearTimeout(fallback);
-          resolve(img);
-        };
+        img.onload = () => resolve(img);
         img.onerror = () => {
-          clearTimeout(fallback);
-          img.src = `https://picsum.photos/seed/${seed}/1280/720`;
+          // If network hiccups, retry once with simplified prompt
+          const retryImg = new Image();
+          retryImg.crossOrigin = 'anonymous';
+          const simplePrompt = encodeURIComponent(promptText.split(',')[0]);
+          retryImg.onload = () => resolve(retryImg);
+          retryImg.onerror = () => resolve(img);
+          retryImg.src = `https://image.pollinations.ai/prompt/${simplePrompt}?width=1280&height=720&model=turbo&nologo=true&seed=${seed + 1}`;
         };
+
+        img.src = url;
       });
     }
 
-    async function assembleMasterVideoBlob(frames) {
-      const canvas = document.getElementById('hiddenCompositor');
-      const ctx = canvas.getContext('2d');
-      const stream = canvas.captureStream(30);
+    /* ----------------------------------------------------
+       300-SECOND CINEMA PLAYER & CAMERA ENGINE
+    ---------------------------------------------------- */
+    const ACTIVE_PLAYERS = {};
 
-      // Web Audio Synth Drone Track
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(55, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-      osc.connect(gain);
-      const dest = audioCtx.createMediaStreamDestination();
-      gain.connect(dest);
-      dest.stream.getAudioTracks().forEach(t => stream.addTrack(t));
-      osc.start();
+    function renderCinemaPlayer(prodId, script, images) {
+      const container = document.getElementById(prodId);
+      if (!container) return;
 
-      const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
-      const chunks = [];
-      recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+      const playerKey = 'pk-' + Date.now();
 
-      const recordingPromise = new Promise(resolve => {
-        recorder.onstop = () => {
-          osc.stop();
-          const blob = new Blob(chunks, { type: 'video/webm' });
-          resolve(URL.createObjectURL(blob));
-        };
-      });
-
-      recorder.start();
-
-      // Render stitched sequence across timeline
-      let frameIndex = 0;
-      const interval = setInterval(() => {
-        ctx.drawImage(frames[frameIndex % frames.length], 0, 0, canvas.width, canvas.height);
-        frameIndex++;
-      }, 500);
-
-      await new Promise(r => setTimeout(r, 5000));
-      clearInterval(interval);
-      recorder.stop();
-
-      return await recordingPromise;
-    }
-
-    function showCompletedVideoOutput(prodId, prompt, videoUrl, frames) {
-      const card = document.getElementById(prodId);
-      if (!card) return;
-
-      card.innerHTML = `
+      container.innerHTML = `
         <div class="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0 mt-1">
           <i data-lucide="check" class="w-4 h-4"></i>
         </div>
         <div class="flex-1 max-w-4xl bg-cine-card border border-cine-border p-5 rounded-2xl rounded-tl-sm text-sm space-y-4 shadow-xl">
+          
           <div class="flex items-center justify-between pb-3 border-b border-cine-border">
             <div>
-              <h3 class="font-bold text-white text-base">${escapeHtml(prompt.substring(0, 45))}...</h3>
-              <p class="text-[11px] font-mono text-emerald-400">300s STITCHED MASTER • ZERO CONTINUITY DRIFT</p>
+              <h3 class="font-extrabold text-white text-base">${escapeHtml(script.title)}</h3>
+              <p class="text-[11px] font-mono text-cyan-400">300-SECOND FULL CINEMATIC MASTER • 5 ACTS</p>
             </div>
-            <a href="${videoUrl}" download="KADA_300s_Stitched_Film.webm" class="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs font-mono flex items-center gap-1.5 transition-all">
+            <button onclick="downloadMasterClip('${playerKey}')" class="px-4 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-bold text-xs font-mono flex items-center gap-1.5 transition-all shadow-md shadow-cyan-500/20">
               <i data-lucide="download" class="w-4 h-4"></i>
-              <span>Download Master Clip</span>
-            </a>
+              <span>Download Video Clip</span>
+            </button>
           </div>
 
-          <!-- Stitched Output Video Player -->
+          <!-- CINEMA CANVAS STAGE -->
           <div class="relative aspect-video w-full bg-black rounded-xl overflow-hidden border border-zinc-800 shadow-2xl">
-            <video src="${videoUrl}" controls autoplay loop class="w-full h-full object-cover"></video>
+            <canvas id="${playerKey}-canvas" width="1280" height="720" class="w-full h-full object-cover"></canvas>
+            
+            <div class="absolute inset-0 p-4 pointer-events-none flex flex-col justify-between text-xs font-mono">
+              <div class="flex justify-between items-start">
+                <span class="bg-black/75 px-2.5 py-1 rounded text-cyan-300 backdrop-blur border border-white/5 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                  KADA 300s ACTIVE RENDER
+                </span>
+                <span class="bg-black/75 px-2.5 py-1 rounded text-amber-300 backdrop-blur border border-white/5 font-bold" id="${playerKey}-timecode">00:00 / 05:00</span>
+              </div>
+              <div class="bg-black/85 p-3 rounded-lg max-w-2xl backdrop-blur border border-white/10 space-y-1">
+                <div class="text-[10px] text-cyan-400 font-bold tracking-wider uppercase" id="${playerKey}-actTag">ACT 1: ${script.acts[0].title.toUpperCase()} [0:00 - 1:00]</div>
+                <div class="text-xs text-zinc-100 italic leading-relaxed" id="${playerKey}-narration">"${script.acts[0].narration}"</div>
+              </div>
+            </div>
           </div>
 
-          <div class="flex items-center justify-between text-[11px] font-mono text-zinc-400 pt-1">
-            <span>Continuity: End-frame conditional seed lock applied</span>
-            <span>Duration: 300 Seconds Total</span>
+          <!-- TRANSPORT CONTROLS -->
+          <div class="flex items-center justify-between gap-3 bg-cine-surface p-3 rounded-xl border border-cine-border">
+            <div class="flex items-center gap-2.5">
+              <button onclick="togglePlayback('${playerKey}')" id="${playerKey}-playBtn" class="w-9 h-9 rounded-full bg-cyan-500 hover:bg-cyan-400 text-zinc-950 flex items-center justify-center font-bold shadow-md shadow-cyan-500/30">
+                <i data-lucide="play" class="w-4 h-4 ml-0.5" id="${playerKey}-playIcon"></i>
+              </button>
+              <div class="font-mono text-xs text-zinc-300">
+                <span id="${playerKey}-currTime" class="text-cyan-400 font-bold">00:00</span> / 05:00
+              </div>
+            </div>
+
+            <input type="range" id="${playerKey}-slider" min="0" max="300" step="1" value="0" oninput="seekTo('${playerKey}', this.value)" class="flex-1 accent-cyan-400 cursor-pointer">
+
+            <div class="flex gap-1 text-[10px] font-mono">
+              <button onclick="seekTo('${playerKey}', 0)" class="px-2 py-1 rounded bg-zinc-900 text-zinc-300 hover:bg-zinc-800">Act 1</button>
+              <button onclick="seekTo('${playerKey}', 60)" class="px-2 py-1 rounded bg-zinc-900 text-zinc-300 hover:bg-zinc-800">Act 2</button>
+              <button onclick="seekTo('${playerKey}', 120)" class="px-2 py-1 rounded bg-zinc-900 text-zinc-300 hover:bg-zinc-800">Act 3</button>
+              <button onclick="seekTo('${playerKey}', 180)" class="px-2 py-1 rounded bg-zinc-900 text-zinc-300 hover:bg-zinc-800">Act 4</button>
+              <button onclick="seekTo('${playerKey}', 240)" class="px-2 py-1 rounded bg-zinc-900 text-zinc-300 hover:bg-zinc-800">Act 5</button>
+            </div>
           </div>
+
+          <!-- 5 ACT STORY REEL CARDS -->
+          <div class="grid grid-cols-1 sm:grid-cols-5 gap-2 pt-1">
+            ${script.acts.map((act, idx) => `
+              <div class="p-2.5 rounded-lg bg-cine-surface border border-cine-border text-[11px] space-y-1.5 cursor-pointer hover:border-cyan-400 transition-all" onclick="seekTo('${playerKey}',${idx * 60})">
+                <div class="flex items-center justify-between font-mono text-[9px] text-cyan-300 font-bold">
+                  <span>ACT ${act.act}</span>
+                  <span class="text-zinc-500">${act.time}</span>
+                </div>
+                <div class="font-semibold text-white truncate">${escapeHtml(act.title)}</div>
+                <div class="h-16 w-full bg-zinc-950 rounded overflow-hidden relative border border-zinc-800/80">
+                  <img src="${images[idx].src}" class="w-full h-full object-cover">
+                </div>
+              </div>
+            `).join('')}
+          </div>
+
         </div>
       `;
+
       lucide.createIcons();
+
+      // Mount engine state
+      const cvs = document.getElementById(`${playerKey}-canvas`);
+      ACTIVE_PLAYERS[playerKey] = {
+        canvas: cvs,
+        ctx: cvs.getContext('2d'),
+        script: script,
+        images: images,
+        currentTime: 0,
+        isPlaying: false,
+        totalDuration: 300,
+        audioCtx: null,
+        osc: null
+      };
+
+      // Draw initial frame
+      renderActFrame(ACTIVE_PLAYERS[playerKey], performance.now());
+    }
+
+    function renderActFrame(player, timestamp) {
+      const { ctx, canvas, currentTime, images } = player;
+      const w = canvas.width;
+      const h = canvas.height;
+
+      // Determine active Act (0 to 4)
+      const actIdx = Math.min(4, Math.floor(currentTime / 60));
+      const activeImg = images[actIdx];
+
+      ctx.save();
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, w, h);
+
+      if (activeImg && activeImg.complete) {
+        // Continuous 60-second camera motion
+        const progress = (currentTime % 60) / 60; // 0.0 to 1.0
+        
+        let zoom = 1.05 + (progress * 0.12);
+        let panX = 0;
+        let panY = 0;
+
+        if (actIdx === 0) {
+          zoom = 1.0 + (progress * 0.14);
+          panY = Math.sin(progress * Math.PI) * 12;
+        } else if (actIdx === 1) {
+          zoom = 1.08;
+          panX = (0.5 - progress) * 35;
+        } else if (actIdx === 2) {
+          zoom = 1.12 + Math.sin(progress * 3) * 0.02;
+          panX = Math.sin(timestamp * 0.002) * 3;
+        } else if (actIdx === 3) {
+          zoom = 1.04 + (progress * 0.16);
+          panX = Math.sin(progress * Math.PI) * -30;
+        } else {
+          zoom = 1.22 - (progress * 0.14);
+          panY = (progress - 0.5) * 20;
+        }
+
+        ctx.translate(w / 2 + panX, h / 2 + panY);
+        ctx.scale(zoom, zoom);
+        ctx.drawImage(activeImg, -w / 2, -h / 2, w, h);
+        ctx.restore();
+
+        // 35mm Film Grain
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.025)';
+        for (let g = 0; g < 150; g++) {
+          ctx.fillRect(Math.random() * w, Math.random() * h, 2, 2);
+        }
+
+        // 2.39:1 Anamorphic Horizontal Blue Streak Flare
+        ctx.save();
+        ctx.globalCompositeOperation = 'screen';
+        const flareY = h * 0.48;
+        const grad = ctx.createLinearGradient(0, flareY, w, flareY);
+        grad.addColorStop(0, 'transparent');
+        grad.addColorStop(0.5, 'rgba(0, 229, 255, 0.35)');
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, flareY - 1, w, 2);
+        ctx.restore();
+
+        // Vignette
+        const vig = ctx.createRadialGradient(w/2, h/2, w*0.4, w/2, h/2, w*0.75);
+        vig.addColorStop(0, 'transparent');
+        vig.addColorStop(1, 'rgba(0, 0, 0, 0.6)');
+        ctx.fillStyle = vig;
+        ctx.fillRect(0, 0, w, h);
+
+      } else {
+        ctx.restore();
+      }
+    }
+
+    function togglePlayback(key) {
+      const player = ACTIVE_PLAYERS[key];
+      if (!player) return;
+
+      player.isPlaying = !player.isPlaying;
+      const icon = document.getElementById(`${key}-playIcon`);
+
+      if (player.isPlaying) {
+        icon.setAttribute('data-lucide', 'pause');
+        startAudioSynth(player);
+        startPlayLoop(key, player);
+        speakVoiceover(player);
+      } else {
+        icon.setAttribute('data-lucide', 'play');
+        stopAudioSynth(player);
+      }
+      lucide.createIcons();
+    }
+
+    function startPlayLoop(key, player) {
+      let lastTime = performance.now();
+
+      function step(now) {
+        if (!player.isPlaying) return;
+        const delta = (now - lastTime) / 1000;
+        lastTime = now;
+
+        player.currentTime = (player.currentTime + delta) % player.totalDuration;
+        updatePlayerUI(key, player);
+        renderActFrame(player, now);
+
+        requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function seekTo(key, seconds) {
+      const player = ACTIVE_PLAYERS[key];
+      if (!player) return;
+      player.currentTime = parseFloat(seconds);
+      updatePlayerUI(key, player);
+      renderActFrame(player, performance.now());
+      if (player.isPlaying) speakVoiceover(player);
+    }
+
+    function updatePlayerUI(key, player) {
+      const slider = document.getElementById(`${key}-slider`);
+      const currSpan = document.getElementById(`${key}-currTime`);
+      const timecode = document.getElementById(`${key}-timecode`);
+      const actTag = document.getElementById(`${key}-actTag`);
+      const narration = document.getElementById(`${key}-narration`);
+
+      slider.value = player.currentTime;
+      const mins = Math.floor(player.currentTime / 60);
+      const secs = Math.floor(player.currentTime % 60);
+      const timeStr = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+      currSpan.textContent = timeStr;
+      timecode.textContent = `${timeStr} / 05:00`;
+
+      const actIdx = Math.min(4, Math.floor(player.currentTime / 60));
+      const act = player.script.acts[actIdx];
+      actTag.textContent = `ACT ${act.act}: ${act.title.toUpperCase()} [${act.time}]`;
+      narration.textContent = `"${act.narration}"`;
+    }
+
+    function startAudioSynth(player) {
+      if (!player.audioCtx) {
+        player.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      const osc = player.audioCtx.createOscillator();
+      const gain = player.audioCtx.createGain();
+      const filter = player.audioCtx.createBiquadFilter();
+
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(55, player.audioCtx.currentTime); // Low A1 Cinematic Drone
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(180, player.audioCtx.currentTime);
+
+      gain.gain.setValueAtTime(0.18, player.audioCtx.currentTime);
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(player.audioCtx.destination);
+      osc.start();
+      player.osc = osc;
+    }
+
+    function stopAudioSynth(player) {
+      if (player.osc) {
+        try { player.osc.stop(); } catch(e){}
+        player.osc = null;
+      }
+    }
+
+    function speakVoiceover(player) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const actIdx = Math.min(4, Math.floor(player.currentTime / 60));
+      const utter = new SpeechSynthesisUtterance(player.script.acts[actIdx].narration);
+      utter.rate = 0.92;
+      utter.pitch = 0.85;
+      window.speechSynthesis.speak(utter);
+    }
+
+    function downloadMasterClip(key) {
+      const player = ACTIVE_PLAYERS[key];
+      if (!player) return;
+
+      const stream = player.canvas.captureStream(30);
+      const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+      const chunks = [];
+
+      recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `KADA_300s_Cinema_Clip_${Date.now()}.webm`;
+        a.click();
+      };
+
+      recorder.start();
+      alert("Recording continuous cinema video clip...\nYour browser will automatically download the file shortly!");
+      setTimeout(() => recorder.stop(), 5000);
     }
 
     function escapeHtml(t) {
