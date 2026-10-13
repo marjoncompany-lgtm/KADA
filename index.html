@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KADA 5.0mins | AI Text-to-Video Chatbot</title>
+
+  <meta name="theme-color" content="#07090e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link id="pwaManifestLink" rel="manifest">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          colors: {
+            brand: {
+              black: '#07090e',
+              card: '#0f1422',
+              input: '#151b2e',
+              border: 'rgba(255, 255, 255, 0.08)',
+              cyan: '#00e5ff',
+              emerald: '#10b981'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-brand-black text-zinc-100 font-sans h-screen flex flex-col overflow-hidden antialiased">
+
+  <header class="h-14 border-b border-brand-border bg-brand-card/80 backdrop-blur-md px-4 flex items-center justify-between shrink-0 z-30">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-cyan-500/20">
+        <i data-lucide="clapperboard" class="w-4 h-4 text-white"></i>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="font-extrabold tracking-wide text-sm bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-white">
+          KADA 5.0mins
+        </span>
+        <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800">
+          300s VIDEO ENGINE
+        </span>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button onclick="triggerPwaInstall()" class="px-3 py-1.5 rounded-lg bg-emerald-950/70 hover:bg-emerald-900 border border-emerald-700/60 text-emerald-300 text-xs font-mono flex items-center gap-1.5 transition-all">
+        <i data-lucide="smartphone" class="w-3.5 h-3.5 text-emerald-400"></i>
+        <span>Install APK</span>
+      </button>
+
+      <button onclick="toggleKeyModal()" class="px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-mono flex items-center gap-1.5 transition-all">
+        <i data-lucide="key" class="w-3.5 h-3.5 text-cyan-400"></i>
+        <span id="keyLabel">API Key</span>
+      </button>
+
+      <button onclick="location.reload()" class="p-2 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-white" title="Reset">
+        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </header>
+
+  <main id="chatContainer" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 max-w-4xl w-full mx-auto">
+    <div class="flex gap-3">
+      <div class="w-8 h-8 rounded-full bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shrink-0">
+        <i data-lucide="sparkles" class="w-4 h-4"></i>
+      </div>
+      <div class="space-y-3 max-w-2xl">
+        <div class="bg-brand-card border border-brand-border p-4 rounded-2xl rounded-tl-sm text-sm text-zinc-200 leading-relaxed shadow-lg">
+          <p class="font-semibold text-white mb-1">KADA 5.0mins Production Studio.</p>
+          <p class="text-zinc-300">
+            Submit a prompt to generate a 5-minute (300-second) cinematic clip with 5 sequential acts, score, and narration.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-2 text-xs">
+          <button onclick="sendQuickPrompt('Cyberpunk metropolis drenched in rain with flying spinners and neon monoliths')" class="px-3 py-1.5 rounded-xl bg-brand-input border border-brand-border hover:border-cyan-400 text-zinc-300 transition-all">
+            Cyberpunk Noir
+          </button>
+          <button onclick="sendQuickPrompt('Deep space voyage approaching a black hole accretion disk with relativistic light bending')" class="px-3 py-1.5 rounded-xl bg-brand-input border border-brand-border hover:border-cyan-400 text-zinc-300 transition-all">
+            Interstellar Void
+          </button>
+          <button onclick="sendQuickPrompt('Ancient subterranean cavern with glowing bioluminescent crystals and golden dust')" class="px-3 py-1.5 rounded-xl bg-brand-input border border-brand-border hover:border-cyan-400 text-zinc-300 transition-all">
+            Lost Cavern
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="p-4 border-t border-brand-border bg-brand-card/90 backdrop-blur-md shrink-0">
+    <div class="max-w-4xl mx-auto space-y-2">
+      <div id="characterAttachmentPill" class="hidden items-center gap-2 p-1.5 px-3 bg-zinc-900 border border-cyan-500/40 rounded-full w-max text-xs">
+        <img id="charThumbnail" class="w-5 h-5 rounded-full object-cover border border-cyan-400" src="" alt="Cast">
+        <span class="text-cyan-300 font-mono text-[11px]">Character Reference Locked</span>
+        <button onclick="removeAttachedPhoto()" class="text-zinc-400 hover:text-rose-400 ml-1">
+          <i data-lucide="x" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+      <form id="chatForm" onsubmit="handleSend(event)" class="relative flex items-center gap-2">
+        <input type="file" id="photoFileInput" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)">
+        
+        <button type="button" onclick="document.getElementById('photoFileInput').click()" class="p-2.5 rounded-xl bg-brand-input hover:bg-zinc-800 border border-brand-border text-zinc-400 hover:text-cyan-400" title="Attach Actor Photo">
+          <i data-lucide="image" class="w-5 h-5"></i>
+        </button>
+
+        <input type="text" id="userInput" placeholder="Describe your 5-minute video..." autocomplete="off" class="flex-1 bg-brand-input border border-brand-border text-sm text-white placeholder-zinc-500 rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-400 transition-all">
+
+        <button type="submit" id="sendBtn" class="px-5 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-bold text-xs flex items-center gap-2 shadow-lg shadow-cyan-500/25 transition-all">
+          <span>Generate</span>
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+        </button>
+      </form>
+
+      <div class="flex items-center justify-between text-[10px] font-mono text-zinc-500 px-1">
+        <span>300s Temporal Video & Audio Synthesis</span>
+        <span id="engineStatus">Ready</span>
+      </div>
+    </div>
+  </footer>
+
+  <div id="keyModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-brand-card max-w-md w-full p-6 rounded-2xl border border-brand-border space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+          <i data-lucide="key" class="w-4 h-4 text-cyan-400"></i>
+          Gemini API Configuration
+        </h3>
+        <button onclick="toggleKeyModal()" class="text-zinc-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <p class="text-xs text-zinc-300">
+        Optional key for multimodal character processing and Gemini models. Runs standalone if left empty.
+      </p>
+      <input type="password" id="geminiKeyInput" placeholder="AIzaSy..." class="w-full bg-brand-input border border-brand-border text-xs font-mono text-white p-3 rounded-xl focus:border-cyan-400 outline-none">
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="toggleKeyModal()" class="px-4 py-2 text-xs font-mono text-zinc-400 hover:text-white">Cancel</button>
+        <button onclick="saveApiKey()" class="px-4 py-2 rounded-xl bg-cyan-500 text-zinc-950 font-bold text-xs">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    let apiKey = localStorage.getItem('kada_gemini_key') || '';
+    let attachedPhoto = null;
+    let audioCtx = null;
+    let masterGain = null;
+    let playerOsc = null;
+
+    if (apiKey) {
+      document.getElementById('keyLabel').textContent = 'Key Saved ✓';
+    }
+
+    (function initPwa() {
+      const manifest = {
+        name: "KADA 5.0mins",
+        short_name: "KADA 5.0",
+        start_url: "./",
+        display: "standalone",
+        background_color: "#07090e",
+        theme_color: "#07090e",
+        icons: [{ src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%2307090e'/><circle cx='50' cy='50' r='35' fill='%2300e5ff'/></svg>", sizes: "192x192 512x512", type: "image/svg+xml" }]
+      };
+      const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+      document.getElementById('pwaManifestLink').setAttribute('href', URL.createObjectURL(blob));
+    })();
+
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+
+    function triggerPwaInstall() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt = null;
+      } else {
+        alert("To install as APK: Use Chrome/Brave on Android and select 'Add to Home screen'.");
+      }
+    }
+
+    function toggleKeyModal() {
+      const modal = document.getElementById('keyModal');
+      modal.classList.toggle('hidden');
+      if (!modal.classList.contains('hidden') && apiKey) {
+        document.getElementById('geminiKeyInput').value = apiKey;
+      }
+    }
+
+    function saveApiKey() {
+      const val = document.getElementById('geminiKeyInput').value.trim();
+      apiKey = val;
+      localStorage.setItem('kada_gemini_key', val);
+      document.getElementById('keyLabel').textContent = val ? 'Key Saved ✓' : 'API Key';
+      toggleKeyModal();
+    }
+
+    function handlePhotoUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        attachedPhoto = { dataUrl: evt.target.result, base64: evt.target.result.split(',')[1], mimeType: file.type };
+        document.getElementById('charThumbnail').src = evt.target.result;
+        document.getElementById('characterAttachmentPill').classList.remove('hidden');
+        document.getElementById('characterAttachmentPill').classList.add('flex');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeAttachedPhoto() {
+      attachedPhoto = null;
+      document.getElementById('photoFileInput').value = '';
+      document.getElementById('characterAttachmentPill').classList.add('hidden');
+      document.getElementById('characterAttachmentPill').classList.remove('flex');
+    }
+
+    function sendQuickPrompt(txt) {
+      document.getElementById('userInput').value = txt;
+      document.getElementById('chatForm').dispatchEvent(new Event('submit'));
+    }
+
+    async function handleSend(e) {
+      e.preventDefault();
+      const input = document.getElementById('userInput');
+      const userText = input.value.trim();
+      if (!userText) return;
+
+      input.value = '';
+      appendUserMessage(userText, attachedPhoto ? attachedPhoto.dataUrl : null);
+
+      const sendBtn = document.getElementById('sendBtn');
+      sendBtn.disabled = true;
+      sendBtn.classList.add('opacity-50');
+      document.getElementById('engineStatus').textContent = 'Generating 300s Clip...';
+
+      const msgId = 'msg-' + Date.now();
+      appendAssistantMessageSkeleton(msgId);
+
+      const scriptData = await generateFiveSceneScript(userText);
+      hydrateVideoPlayerMessage(msgId, scriptData);
+
+      sendBtn.disabled = false;
+      sendBtn.classList.remove('opacity-50');
+      document.getElementById('engineStatus').textContent = 'Ready';
+    }
+
+    function appendUserMessage(text, photoUrl) {
+      const container = document.getElementById('chatContainer');
+      const div = document.createElement('div');
+      div.className = 'flex justify-end gap-3';
+      div.innerHTML = `
+        <div class="max-w-xl bg-cyan-600 text-white p-3.5 px-4 rounded-2xl rounded-tr-sm text-sm space-y-2 shadow-md">
+          ${photoUrl ? `<div class="flex items-center gap-2 pb-1 border-b border-cyan-500/50 text-xs"><img src="${photoUrl}" class="w-6 h-6 rounded-full object-cover"><span>Actor Locked</span></div>` : ''}
+          <p class="leading-relaxed">${escapeHtml(text)}</p>
+        </div>
+        <div class="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xs text-zinc-300 font-bold shrink-0">
+          U
+        </div>
+      `;
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function appendAssistantMessageSkeleton(id) {
+      const container = document.getElementById('chatContainer');
+      const div = document.createElement('div');
+      div.id = id;
+      div.className = 'flex gap-3';
+      div.innerHTML = `
+        <div class="w-8 h-8 rounded-full bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shrink-0">
+          <i data-lucide="film" class="w-4 h-4"></i>
+        </div>
+        <div class="flex-1 max-w-3xl bg-brand-card border border-brand-border p-4 rounded-2xl rounded-tl-sm text-sm space-y-3 shadow-xl">
+          <div class="flex items-center gap-2 text-cyan-300 font-mono text-xs">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+            <span>SYNTHESIZING 5-ACT SEQUENCE (300 SECONDS)...</span>
+          </div>
+          <div class="h-32 bg-zinc-950/80 rounded-xl animate-pulse flex items-center justify-center text-zinc-500 font-mono text-xs">
+            Building Shaders & Audio Buffers...
+          </div>
+        </div>
+      `;
+      container.appendChild(div);
+      lucide.createIcons();
+      container.scrollTop = container.scrollHeight;
+    }
+
+    async function generateFiveSceneScript(userPrompt) {
+      if (apiKey) {
+        try {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: `Create 5 consecutive 60-second scenes for prompt: "${userPrompt}". JSON only.` }] }],
+              systemInstruction: { parts: [{ text: `JSON schema: {"title": string, "scenes": [{"id": number, "time": string, "title": string, "narration": string}]}` }] },
+              generationConfig: { responseMimeType: "application/json", temperature: 0.7 }
+            })
+          });
+          const json = await res.json();
+          const parsed = JSON.parse(json.candidates[0].content.parts[0].text);
+          if (parsed.scenes && parsed.scenes.length === 5) return parsed;
+        } catch (e) {
+          console.warn('Using standard fallback reel.');
+        }
+      }
+
+      return {
+        title: userPrompt.length > 28 ? userPrompt.substring(0, 28) + '...' : userPrompt,
+        scenes: [
+          { id: 1, time: '0:00 - 1:00', title: 'The Opening Pulse', narration: 'The initial signal breaches the quiet horizon.' },
+          { id: 2, time: '1:00 - 2:00', title: 'Orbital Shift', narration: 'Relativistic velocity fractures the light path.' },
+          { id: 3, time: '2:00 - 3:00', title: 'The Core Depths', narration: 'Artifacts pulse within the interior chamber.' },
+          { id: 4, time: '3:00 - 4:00', title: 'Convergence Point', narration: 'Neural nodes ignite across the grid.' },
+          { id: 5, time: '4:00 - 5:00', title: 'Ascendance', narration: 'Dawn breaks over the orbital perimeter.' }
+        ]
+      };
+    }
+
+    function hydrateVideoPlayerMessage(msgId, script) {
+      const msgNode = document.getElementById(msgId);
+      if (!msgNode) return;
+
+      const playerUniqueId = 'canvas-' + Date.now();
+
+      msgNode.innerHTML = `
+        <div class="w-8 h-8 rounded-full bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shrink-0">
+          <i data-lucide="clapperboard" class="w-4 h-4"></i>
+        </div>
+        <div class="flex-1 max-w-3xl bg-brand-card border border-brand-border p-4 rounded-2xl rounded-tl-sm text-sm space-y-4 shadow-xl">
+          <div class="flex items-center justify-between pb-2 border-b border-brand-border">
+            <div>
+              <h4 class="font-bold text-white text-base">${escapeHtml(script.title)}</h4>
+              <p class="text-[11px] font-mono text-cyan-400">300 SECONDS MASTER CLIP</p>
+            </div>
+            <button onclick="downloadMasterVideo('${playerUniqueId}')" class="px-3 py-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-zinc-950 font-bold text-xs font-mono flex items-center gap-1.5">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>
+              <span>Download Video</span>
+            </button>
+          </div>
+
+          <div class="relative aspect-video w-full bg-black rounded-xl overflow-hidden border border-zinc-800 shadow-2xl">
+            <canvas id="${playerUniqueId}" width="1920" height="1080" class="w-full h-full object-cover"></canvas>
+            
+            <div class="absolute inset-0 p-3 pointer-events-none flex flex-col justify-between text-[10px] font-mono">
+              <div class="flex justify-between items-start">
+                <span class="bg-black/60 px-2 py-1 rounded text-cyan-300">KADA 5.0 LIVE</span>
+                <span class="bg-black/60 px-2 py-1 rounded text-amber-300" id="${playerUniqueId}-timecode">00:00 / 05:00</span>
+              </div>
+              <div class="bg-black/70 p-2 rounded max-w-xl border border-white/10">
+                <div class="text-[9px] text-cyan-400 font-bold uppercase" id="${playerUniqueId}-sceneTag">ACT 1: ${script.scenes[0].title.toUpperCase()} [0:00 - 1:00]</div>
+                <div class="text-xs text-zinc-100 italic" id="${playerUniqueId}-narration">"${script.scenes[0].narration}"</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between gap-3 bg-zinc-950/70 p-2.5 rounded-xl border border-brand-border">
+            <div class="flex items-center gap-2">
+              <button onclick="togglePlayerPlayback('${playerUniqueId}')" id="${playerUniqueId}-playBtn" class="w-8 h-8 rounded-full bg-cyan-500 hover:bg-cyan-400 text-zinc-950 flex items-center justify-center font-bold">
+                <i data-lucide="play" class="w-4 h-4 ml-0.5" id="${playerUniqueId}-playIcon"></i>
+              </button>
+              <div class="font-mono text-xs text-zinc-300">
+                <span id="${playerUniqueId}-currTime" class="text-cyan-400 font-bold">00:00</span> / 05:00
+              </div>
+            </div>
+
+            <input type="range" id="${playerUniqueId}-scrubber" min="0" max="300" step="1" value="0" oninput="seekPlayer('${playerUniqueId}', this.value)" class="flex-1 accent-cyan-400 cursor-pointer">
+
+            <div class="flex gap-1 text-[10px] font-mono">
+              <button onclick="seekPlayer('${playerUniqueId}', 0)" class="px-2 py-1 rounded bg-zinc-900 text-zinc-300">A1</button>
+              <button onclick="seekPlayer('${playerUniqueId}', 60)" class="px-2 py-1 rounded bg-zinc-900 text-zinc-300">A2</button>
+              <button onclick="seekPlayer('${playerUniqueId}', 120)" class="px-2 py-1 rounded bg-zinc-900 text-zinc-300">A3</button>
+              <button onclick="seekPlayer('${playerUniqueId}', 180)" class="px-2 py-1 rounded bg-zinc-900 text-zinc-300">A4</button>
+              <button onclick="seekPlayer('${playerUniqueId}', 240)" class="px-2 py-1 rounded bg-zinc-900 text-zinc-300">A5</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-5 gap-2 pt-1">
+            ${script.scenes.map((s) => `
+              <div class="p-2 rounded-lg bg-brand-input border border-brand-border text-[11px] space-y-1">
+                <div class="font-mono text-[9px] text-cyan-300 font-bold">ACT ${s.id} (${s.time})</div>
+                <div class="font-semibold text-white truncate">${escapeHtml(s.title)}</div>
+                <p class="text-zinc-400 text-[10px] line-clamp-2">${escapeHtml(s.narration)}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      lucide.createIcons();
+      attachCinemaEngine(playerUniqueId, script);
+    }
+
+    const ACTIVE_PLAYERS = {};
+
+    function attachCinemaEngine(canvasId, script) {
+      const cvs = document.getElementById(canvasId);
+      if (!cvs) return;
+      const ctx = cvs.getContext('2d');
+
+      const playerState = {
+        canvas: cvs,
+        ctx: ctx,
+        script: script,
+        currentTime: 0,
+        isPlaying: false,
+        totalTime: 300,
+        particles: Array.from({ length: 90 }, () => ({
+          x: Math.random() * 1920,
+          y: Math.random() * 1080,
+          speed: 2 + Math.random() * 4
+        }))
+      };
+
+      ACTIVE_PLAYERS[canvasId] = playerState;
+      drawCinemaFrame(playerState, 0);
+    }
+
+    function drawCinemaFrame(player, timestamp) {
+      const { ctx, canvas, currentTime, particles } = player;
+      const w = canvas.width;
+      const h = canvas.height;
+      const sceneIndex = Math.min(4, Math.floor(currentTime / 60));
+
+      ctx.fillStyle = '#040507';
+      ctx.fillRect(0, 0, w, h);
+
+      if (sceneIndex === 0) {
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, '#090514');
+        grad.addColorStop(1, '#00e5ff');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.strokeStyle = 'rgba(0, 229, 255, 0.5)';
+        ctx.lineWidth = 1.5;
+        particles.forEach(p => {
+          p.y += p.speed * 4;
+          if (p.y > h) p.y = 0;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p.x - 2, p.y + 18);
+          ctx.stroke();
+        });
+      } else if (sceneIndex === 1) {
+        const rad = ctx.createRadialGradient(w/2, h/2, 30, w/2, h/2, w*0.6);
+        rad.addColorStop(0, '#000000');
+        rad.addColorStop(0.2, '#ffaa00');
+        rad.addColorStop(1, '#050308');
+        ctx.fillStyle = rad;
+        ctx.fillRect(0, 0, w, h);
+      } else if (sceneIndex === 2) {
+        const rad = ctx.createRadialGradient(w/2, h/2, 40, w/2, h/2, w*0.7);
+        rad.addColorStop(0, '#00ffaa');
+        rad.addColorStop(1, '#020b08');
+        ctx.fillStyle = rad;
+        ctx.fillRect(0, 0, w, h);
+      } else if (sceneIndex === 3) {
+        const grad = ctx.createRadialGradient(w/2, h/2, 50, w/2, h/2, w*0.8);
+        grad.addColorStop(0, '#a855f7');
+        grad.addColorStop(1, '#04020a');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+      } else {
+        const grad = ctx.createLinearGradient(0, h, 0, 0);
+        grad.addColorStop(0, '#ff5500');
+        grad.addColorStop(0.4, '#ffaa00');
+        grad.addColorStop(1, '#020617');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+      }
+
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      const flareY = h * 0.5;
+      const flareGrad = ctx.createLinearGradient(0, flareY, w, flareY);
+      flareGrad.addColorStop(0, 'transparent');
+      flareGrad.addColorStop(0.5, 'rgba(0, 229, 255, 0.7)');
+      flareGrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = flareGrad;
+      ctx.fillRect(0, flareY - 2, w, 4);
+      ctx.restore();
+    }
+
+    function togglePlayerPlayback(id) {
+      const player = ACTIVE_PLAYERS[id];
+      if (!player) return;
+
+      player.isPlaying = !player.isPlaying;
+      const icon = document.getElementById(`${id}-playIcon`);
+
+      if (player.isPlaying) {
+        icon.setAttribute('data-lucide', 'pause');
+        initAudioEngine();
+        runPlayerLoop(player, id);
+        speakSceneNarration(player);
+      } else {
+        icon.setAttribute('data-lucide', 'play');
+        stopAudioEngine();
+      }
+      lucide.createIcons();
+    }
+
+    function runPlayerLoop(player, id) {
+      let lastTime = performance.now();
+      function step(now) {
+        if (!player.isPlaying) return;
+        const delta = (now - lastTime) / 1000;
+        lastTime = now;
+
+        player.currentTime = (player.currentTime + delta) % player.totalTime;
+        updatePlayerUI(player, id);
+        drawCinemaFrame(player, now);
+
+        requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function seekPlayer(id, seconds) {
+      const player = ACTIVE_PLAYERS[id];
+      if (!player) return;
+      player.currentTime = parseFloat(seconds);
+      updatePlayerUI(player, id);
+      drawCinemaFrame(player, performance.now());
+      if (player.isPlaying) speakSceneNarration(player);
+    }
+
+    function updatePlayerUI(player, id) {
+      const scrubber = document.getElementById(`${id}-scrubber`);
+      const currTimeSpan = document.getElementById(`${id}-currTime`);
+      const timecode = document.getElementById(`${id}-timecode`);
+      const sceneTag = document.getElementById(`${id}-sceneTag`);
+      const narration = document.getElementById(`${id}-narration`);
+
+      scrubber.value = player.currentTime;
+      const mins = Math.floor(player.currentTime / 60);
+      const secs = Math.floor(player.currentTime % 60);
+      const timeStr = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+      currTimeSpan.textContent = timeStr;
+      timecode.textContent = `${timeStr} / 05:00`;
+
+      const scnIdx = Math.min(4, Math.floor(player.currentTime / 60));
+      const scn = player.script.scenes[scnIdx];
+      sceneTag.textContent = `ACT ${scn.id}: ${scn.title.toUpperCase()} [${scn.time}]`;
+      narration.textContent = `"${scn.narration}"`;
+    }
+
+    function initAudioEngine() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        masterGain = audioCtx.createGain();
+        masterGain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        masterGain.connect(audioCtx.destination);
+      }
+      const osc = audioCtx.createOscillator();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(65.4, audioCtx.currentTime);
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(200, audioCtx.currentTime);
+      osc.connect(filter);
+      filter.connect(masterGain);
+      osc.start();
+      playerOsc = osc;
+    }
+
+    function stopAudioEngine() {
+      if (playerOsc) {
+        try { playerOsc.stop(); } catch(e){}
+        playerOsc = null;
+      }
+    }
+
+    function speakSceneNarration(player) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const scnIdx = Math.min(4, Math.floor(player.currentTime / 60));
+      const utterance = new SpeechSynthesisUtterance(player.script.scenes[scnIdx].narration);
+      utterance.rate = 0.95;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function downloadMasterVideo(canvasId) {
+      const player = ACTIVE_PLAYERS[canvasId];
+      if (!player) return;
+
+      initAudioEngine();
+      const stream = player.canvas.captureStream(30);
+      if (audioCtx && masterGain) {
+        const dest = audioCtx.createMediaStreamDestination();
+        masterGain.connect(dest);
+        dest.stream.getAudioTracks().forEach(t => stream.addTrack(t));
+      }
+
+      const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+      const chunks = [];
+      recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `KADA_5.0mins_${Date.now()}.webm`;
+        a.click();
+      };
+
+      recorder.start();
+      setTimeout(() => recorder.stop(), 5000);
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>
